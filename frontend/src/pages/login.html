@@ -1,0 +1,37 @@
+import { useState } from "react";
+
+function Login() {
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+
+  const handleLogin = async () => {
+    console.log({
+      email,
+      senha
+    });
+  };
+
+  return (
+    <div>
+      <h1>ConnectCRM</h1>
+
+      <input
+        type="email"
+        placeholder="E-mail"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <input
+        type="password"
+        placeholder="Senha"
+        onChange={(e) => setSenha(e.target.value)}
+      />
+
+      <button onClick={handleLogin}>
+        Entrar
+      </button>
+    </div>
+  );
+}
+
+export default Login;
