@@ -1,0 +1,18 @@
+// =====================================================
+// KANBAN
+// -----------------------------------------------------
+// Responsável por carregar todas as etapas do Pipeline
+// e renderizar as colunas do funil.
+//
+// Fluxo:
+//
+// MySQL
+//   ↓
+// API (/pipeline)
+//   ↓
+// stages
+//   ↓
+// KanbanColumn
+//   ↓
+// KanbanCard
+// =====================================================

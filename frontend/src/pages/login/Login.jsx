@@ -1,5 +1,14 @@
+import ChatIcon from '@mui/icons-material/Chat';
 import { useState } from 'react';
 import api from '../../services/api';
+import {
+    Box,
+    Paper,
+    Typography,
+    TextField,
+    Button
+} from '@mui/material';
+
 
 function Login() {
 
@@ -43,45 +52,111 @@ window.location.href = '/dashboard';
 
     }
 
-    return (
-        <div
-            style={{
-                width: '300px',
-                margin: '100px auto'
+return (
+
+    <Box
+        sx={{
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#f5f7fb'
+        }}
+    >
+
+        <Paper
+            elevation={4}
+            sx={{
+                width: 420,
+                padding: 5,
+                borderRadius: 4
             }}
         >
-            <h1>ConnectCRM</h1>
 
-            <input
-                type="email"
-                placeholder="Email"
+            <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    gap={1}
+    mb={3}
+>
+
+    <ChatIcon
+        sx={{
+            fontSize: 42,
+            color: '#1976d2'
+        }}
+    />
+
+    <Typography
+        variant="h4"
+        fontWeight="bold"
+    >
+        ConnectCRM
+    </Typography>
+
+</Box>
+
+            <Typography
+                align="center"
+                color="text.secondary"
+                mb={4}
+            >
+                Centralize seus clientes, conversas e atendimentos em um único lugar.
+            </Typography>
+
+            <TextField
+                label="E-mail"
+                fullWidth
+                margin="normal"
                 value={email}
                 onChange={(e) =>
                     setEmail(e.target.value)
                 }
             />
 
-            <br />
-            <br />
-
-            <input
+            <TextField
+                label="Senha"
                 type="password"
-                placeholder="Senha"
+                fullWidth
+                margin="normal"
                 value={password}
                 onChange={(e) =>
                     setPassword(e.target.value)
                 }
             />
 
-            <br />
-            <br />
-
-            <button onClick={handleLogin}>
+            <Button
+                variant="contained"
+                fullWidth
+                size="large"
+                sx={{
+                mt:3,
+                height:52,
+                borderRadius:30
+            }}
+                onClick={handleLogin}
+            >
                 Entrar
-            </button>
+            </Button>
 
-        </div>
-    );
+            <Typography
+                variant="caption"
+                display="block"
+                align="center"
+                sx={{
+                    mt: 4,
+                    color: 'text.secondary'
+                }}
+            >
+                Versão Demonstrativa • ConnectCRM
+            </Typography>
+
+        </Paper>
+
+    </Box>
+
+);
 }
 
 export default Login;

@@ -32,6 +32,11 @@ async function update(id, contact) {
     return await repository.update(id, contact);
 
 }
+async function getMessages(contactId){
+
+    return repository.findByContact(contactId);
+
+}
 module.exports = {
     create,
     findAll,

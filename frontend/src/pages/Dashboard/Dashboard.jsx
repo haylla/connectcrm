@@ -1,14 +1,20 @@
 import {
     Box,
-    Card,
-    CardContent,
     Typography
 } from '@mui/material';
 
-import Sidebar from
-'../../components/Sidebar/Sidebar';
 import { useEffect, useState } from 'react';
+
+import Sidebar from '../../components/Sidebar/Sidebar';
+import DashboardCard from '../../pages/Dashboard/DashboardCard';
+
 import api from '../../services/api';
+
+import PeopleIcon from '@mui/icons-material/People';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import ChatIcon from '@mui/icons-material/Chat';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+
 
 function Dashboard() {
 
@@ -73,10 +79,24 @@ function Dashboard() {
                     Dashboard
                 </Typography>
 
-                <Typography>
-                    Bem-vindo,
-                    {user?.name}
-                </Typography>
+                <Box mb={4}>
+
+    <Typography
+        variant="h5"
+        fontWeight="bold"
+    >
+        Olá, {user?.name}
+    </Typography>
+
+    <Typography
+        color="text.secondary"
+        mt={1}
+    >
+        Bem-vinda ao ConnectCRM.
+        Acompanhe seus indicadores em tempo real.
+    </Typography>
+
+</Box>
 
                 <Box
                 sx={{
@@ -87,57 +107,33 @@ function Dashboard() {
                  }}
 >
 
-                    <Card sx={{ width: 220 }}>
-                        <CardContent>
-                            <Typography>
-                                👥 Contatos
-                            </Typography>
-                            <Typography
-                                variant="h4"
-                            >
-                              {stats.contacts}
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                    <DashboardCard
+                        title="Contatos"
+                        value={stats.contacts}
+                        subtitle="Atualizado agora"
+                        icon={<PeopleIcon fontSize="large" />}
+                    />
 
-                    <Card sx={{ width: 220 }}>
-                        <CardContent>
-                            <Typography>
-                                📈 Leads
-                            </Typography>
-                            <Typography
-                                variant="h4"
-                            >
-                                0
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                    <DashboardCard
+                        title="Leads"
+                        value={stats.leads}
+                        subtitle="Este mês"
+                        icon={<TrendingUpIcon fontSize="large" />}
+                    />
 
-                    <Card sx={{ width: 220 }}>
-                        <CardContent>
-                            <Typography>
-                                📌 Em andamento
-                            </Typography>
-                            <Typography
-                                variant="h4"
-                            >
-                                0
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                    <DashboardCard
+                        title="Em andamento"
+                        value={stats.andamento}
+                        subtitle="Atendimentos"
+                        icon={<ChatIcon fontSize="large" />}
+                    />
 
-                    <Card sx={{ width: 220 }}>
-                        <CardContent>
-                            <Typography>
-                                ✅ Fechados
-                            </Typography>
-                            <Typography
-                                variant="h4"
-                            >
-                                0
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                   <DashboardCard
+                        title="Fechados"
+                        value={stats.fechados}
+                        subtitle="Concluídos"
+                        icon={<CheckCircleIcon fontSize="large" />}
+                    />
 
                 </Box>
 

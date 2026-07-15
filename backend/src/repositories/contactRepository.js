@@ -41,9 +41,45 @@ async function update(id, contact) {
 
     return result;
 }
+async function findByCompany(companyId) {
+
+    const [rows] = await db.query(
+
+        `SELECT
+            id,
+            name,
+            phone,
+            email,
+            stage_id
+         FROM contacts
+         WHERE company_id = ?
+         ORDER BY name`,
+
+        [companyId]
+
+    );
+
+    return rows;
+
+}
 module.exports = {
     create,
     findAll,
+    findByCompany,
     update
 };
+
+async function findById(id) {
+
+    const [rows] = await db.query(
+
+        'SELECT * FROM contacts WHERE id = ?',
+
+        [id]
+
+    );
+
+    return rows[0];
+
+}
 

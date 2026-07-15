@@ -1,3 +1,4 @@
+import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from 'react';
 
 import {
@@ -18,6 +19,10 @@ import {
     TextField,
     IconButton
 } from '@mui/material';
+
+import Grid from '@mui/material/Grid';
+import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -127,6 +132,7 @@ async function sendWhatsAppMessage() {
 }
     return (
 
+        
         <Box sx={{ display: 'flex' }}>
 
             <Sidebar />
@@ -138,26 +144,174 @@ async function sendWhatsAppMessage() {
                 }}
             >
 
+                <Box
+    sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        mb: 4
+    }}
+>
+    <Box>
+
+        <Typography variant="h4" fontWeight="bold">
+
+         Contatos
+
+        </Typography>
+
+        <Typography color="text.secondary">
+
+            Centralize seus clientes e inicie atendimentos pelo WhatsApp.
+
+        </Typography>
+
+    </Box>
+
+<Button
+    variant="contained"
+    size="large"
+    startIcon={<AddIcon />}
+    onClick={() => setOpen(true)}
+    sx={{
+        height: 52,
+        borderRadius: 3,
+        px: 3,
+        fontWeight: 'bold',
+        textTransform: 'none'
+    }}
+>
+    Novo Contato
+</Button>
+<Grid
+    container
+    spacing={2}
+    sx={{ mb: 4 }}
+>
+
+    <Grid size={{ xs: 12, md: 4 }}>
+
+           <Card
+    sx={{
+        borderRadius: 4,
+        boxShadow: 3,
+        textAlign: 'center',
+        height: '100%'
+    }}
+    >
+
+            <CardContent>
+
                 <Typography
                     variant="h4"
-                    gutterBottom
+                    fontWeight="bold"
+                    
                 >
-                    Contatos
+
+                    {contacts.length}
+
                 </Typography>
 
-                <Button
-                    variant="contained"
-                    onClick={() => setOpen(true)}
-                    sx={{ mb: 3 }}
+                <Typography color="text.secondary">
+
+                    Total de Contatos
+
+                </Typography>
+
+            </CardContent>
+
+        </Card>
+
+    </Grid>
+
+    <Grid size={{ xs: 12, md: 4 }}>
+
+        <Card
+    sx={{
+        borderRadius: 4,
+        boxShadow: 3,
+        textAlign: 'center',
+        height: '100%'
+    }}
+>
+
+            <CardContent>
+
+                <Typography
+                    variant="h4"
+                    fontWeight="bold"
                 >
-                    + Novo Contato
-                </Button>
+
+                    {
+                        contacts.filter(
+                            c => c.status === 'LEAD'
+                        ).length
+                    }
+
+                </Typography>
+
+                <Typography color="text.secondary">
+
+                    Leads
+
+                </Typography>
+
+            </CardContent>
+
+        </Card>
+
+    </Grid>
+
+    <Grid size={{ xs: 12, md: 4 }}>
+
+        <Card
+    sx={{
+        borderRadius: 4,
+        boxShadow: 3
+    }}
+>
+
+            <CardContent>
+
+                <Typography
+                    variant="h4"
+                    fontWeight="bold"
+                >
+
+                    💬
+
+                </Typography>
+
+                <Typography color="text.secondary">
+
+                    WhatsApp Integrado
+
+                </Typography>
+
+            </CardContent>
+
+        </Card>
+
+    </Grid>
+
+</Grid>
+</Box>
 
                 <Card>
 
                     <CardContent>
 
-                        <Table>
+                        <Table
+    sx={{
+        '& th': {
+            fontWeight: 'bold',
+            backgroundColor: '#fafafa'
+        },
+        '& tbody tr:hover': {
+            backgroundColor: '#f8fbff'
+        }
+    }}
+>
 
                             <TableHead>
 
@@ -180,9 +334,15 @@ async function sendWhatsAppMessage() {
 
                                     <TableRow key={contact.id}>
 
-                                        <TableCell>
+                                       <TableCell>
+
+                                        <Typography fontWeight="bold">
+
                                             {contact.name}
-                                        </TableCell>
+
+                                        </Typography>
+
+                                       </TableCell>
 
                                         <TableCell>
                                             {contact.phone}
@@ -191,31 +351,64 @@ async function sendWhatsAppMessage() {
                                         <TableCell>
                                             {contact.email}
                                         </TableCell>
+<TableCell
+    align="center"
+    sx={{
+        width: 140
+    }}
+>
 
-                                        <TableCell align="center">
+    <Box
+        sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: 1
+        }}
+    >
 
-                                            <IconButton color="primary">
-                                                <EditIcon />
-                                            </IconButton>
+        <IconButton
+            color="primary"
+            sx={{
+                '&:hover': {
+                    transform: 'scale(1.15)'
+                }
+            }}
+        >
+            <EditIcon />
+        </IconButton>
 
-                                            <IconButton
-                                                color="success"
-                                                onClick={() => {
+        <IconButton
+            color="success"
+            onClick={() => {
 
-                                                    setSelectedContact(contact);
+                setSelectedContact(contact);
 
-                                                    setChatOpen(true);
+                setChatOpen(true);
 
-                                                }}
-                                            >
-                                                <ChatIcon />
-                                            </IconButton>
+            }}
+            sx={{
+                '&:hover': {
+                    transform: 'scale(1.15)'
+                }
+            }}
+        >
+            <ChatIcon />
+        </IconButton>
 
-                                            <IconButton color="error">
-                                                <DeleteIcon />
-                                            </IconButton>
+        <IconButton
+            color="error"
+            sx={{
+                '&:hover': {
+                    transform: 'scale(1.15)'
+                }
+            }}
+        >
+            <DeleteIcon />
+        </IconButton>
 
-                                        </TableCell>
+    </Box>
+
+</TableCell>
 
                                     </TableRow>
 
@@ -230,6 +423,11 @@ async function sendWhatsAppMessage() {
                 </Card>
 
                 <Dialog
+                PaperProps={{
+                    sx: {
+                        borderRadius: 4
+                    }
+                }}
                     open={open}
                     onClose={() => setOpen(false)}
                 >
@@ -286,6 +484,11 @@ async function sendWhatsAppMessage() {
                 </Dialog>
 
                 <Dialog
+                    PaperProps={{
+                        sx: {
+                            borderRadius: 4
+                        }
+                    }}      
                     open={chatOpen}
                     onClose={() => setChatOpen(false)}
                     maxWidth="sm"

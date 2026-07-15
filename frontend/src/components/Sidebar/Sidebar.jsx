@@ -1,5 +1,15 @@
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import PeopleIcon from '@mui/icons-material/People';
+import ChatIcon from '@mui/icons-material/Chat';
+import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { Link } from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu';
+import IconButton from '@mui/material/IconButton';
+import { useState } from 'react';
 import {
+    Box,
     Drawer,
     List,
     ListItemButton,
@@ -8,64 +18,177 @@ import {
 } from '@mui/material';
 
 function Sidebar() {
-
+const [collapsed, setCollapsed] = useState(false);
     return (
         <Drawer
             variant="permanent"
-            sx={{
-                width: 240,
-                '& .MuiDrawer-paper': {
-                    width: 240
-                }
-            }}
-        >
-            <Typography
-                variant="h5"
-                sx={{
-                    padding: 2,
-                    fontWeight: 'bold'
-                }}
-            >
-                ConnectCRM
-            </Typography>
+           sx={{
+                width: collapsed ? 80 : 240,
+                flexShrink: 0,
 
+            '& .MuiDrawer-paper': {
+                width: collapsed ? 80 : 240,
+                backgroundColor: '#1E293B',
+                color: '#FFFFFF',
+                borderRight: 'none',
+                boxSizing: 'border-box'
+    }
+}}
+        >
+<Box
+    sx={{
+        display: 'flex',
+        justifyContent:'flex-start'
+        ,
+        alignItems: 'center',
+        p: 2
+    }}
+>
+
+{!collapsed && (
+
+<Typography
+    variant="h6"
+    fontWeight="bold"
+>
+    ConnectCRM
+</Typography>
+    )}
+ <IconButton
+        onClick={() => setCollapsed(!collapsed)}
+        sx={{ color: '#fff' }}
+    >
+    <MenuIcon />
+
+</IconButton>
+    
+</Box>
             <List>
 
-                <ListItemButton selected>
-                    <ListItemText
-                        primary="Dashboard"
-                    />
+                <ListItemButton
+                component={Link}
+                to="/dashboard"
+                sx={{
+                mx: 1,
+                my: .5,
+                borderRadius: 2,
+
+                '&:hover': {
+                    backgroundColor: '#334155'
+    }
+}}
+            >   
+                <DashboardIcon sx={{mr: 2,color:'#90CAF9'}} />
+
+{!collapsed && (
+
+    <ListItemText
+        primary="Dashboard"
+    />
+
+)}
                 </ListItemButton>
 
                <ListItemButton
                     component={Link}
-                     to="/contacts"
+                    to="/contacts"
+                                   sx={{
+                mx: 1,
+                my: .5,
+                borderRadius: 2,
+
+                '&:hover': {
+                    backgroundColor: '#334155'
+    }
+}}
                 >
-                <ListItemText
-                primary="Contatos"
-                />
+                    <PeopleIcon sx={{mr: 2,color:'#90CAF9'}} />
+
+                   {!collapsed && (
+                    <ListItemText
+                        primary="Contatos"
+                    />
+                )}
+                </ListItemButton>
+                <ListItemButton
+                component={Link}
+                to="/conversations"
+                               sx={{
+                mx: 1,
+                my: .5,
+                borderRadius: 2,
+
+                '&:hover': {
+                    backgroundColor: '#334155'
+    }
+}}
+            >
+                <ChatIcon sx={{mr: 2,color:'#90CAF9'}} />
+
+                {!collapsed && (
+                <ListItemText primary="Conversas"/>
+                )}
                 </ListItemButton>
 
-                <ListItemButton>
-                    <ListItemText
-                        primary="Kanban"
-                    />
-                </ListItemButton>
+               <ListItemButton
+    component={Link}
+    to="/kanban"
+    sx={{
+        mx: 1,
+        my: .5,
+        borderRadius: 2,
+        '&:hover': {
+            backgroundColor: '#334155'
+        }
+    }}
+>
+
+    <ViewKanbanIcon
+        sx={{
+            mr:2,
+            color:'#90CAF9'
+        }}
+    />
+
+    {!collapsed && (
+        <ListItemText primary="Kanban" />
+    )}
+
+</ListItemButton>
 
                 <ListItemButton>
-                    <ListItemText
-                        primary="Campanhas"
-                    />
+
+                <CampaignIcon sx={{mr: 2,color:'#90CAF9'}} />
+
+                {!collapsed && ( 
+                    <ListItemText primary="Campanhas" />
+                )}
                 </ListItemButton>
 
-                <ListItemButton>
-                    <ListItemText
-                        primary="Logout"
-                    />
+              <ListItemButton>
+
+                <LogoutIcon sx={{mr: 2,color:'#90CAF9'}} />
+                
+                {!collapsed && ( 
+                <ListItemText primary="Logout"/>
+                )}
+
                 </ListItemButton>
 
             </List>
+<Typography
+    variant="caption"
+    sx={{
+        mt: 'auto',
+        p: 2,
+        textAlign: 'center',
+        color: '#94A3B8'
+    }}
+>
 
+    ConnectCRM v1.0
+
+</Typography>
         </Drawer>
     );
 
