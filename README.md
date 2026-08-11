@@ -336,7 +336,7 @@ npm install
 npm run dev
 ```
 
-## 🧪 Testes da API
+## Testes da API
 
 Durante o desenvolvimento, os endpoints foram testados utilizando ferramentas como **Thunder Client**, validando o fluxo:
 
