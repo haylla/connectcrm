@@ -171,7 +171,7 @@ Integração WhatsApp / Evolution API
 - XAMPP
 - phpMyAdmin
 
-## 📂 Estrutura do projeto
+## Estrutura do projeto
 
 ```text
 ConnectCRM/
@@ -205,7 +205,7 @@ ConnectCRM/
 └── README.md
 ```
 
-## 🗃️ Modelo de dados
+## Modelo de dados
 
 ```text
              ┌──────────────┐
@@ -231,7 +231,7 @@ ConnectCRM/
 
 A documentação do projeto define entidades como `companies`, `users`, `contacts`, `conversations`, `messages` e `whatsapp_instances`, formando a base para uma arquitetura multiempresa.
 
-## 🔄 Fluxo de autenticação
+## Fluxo de autenticação
 
 ```text
 Login
@@ -261,7 +261,7 @@ JWT
 React
 ```
 
-## 🚀 Como executar
+## Como executar
 
 ### Pré-requisitos
 
@@ -372,7 +372,7 @@ MessageRepository
 MySQL
 ```
 
-## 🗺️ Roadmap
+## Roadmap
 
 ### Atendimento
 - [x] Cadastro de contatos
@@ -441,7 +441,7 @@ permite maior organização, manutenção e evolução do código.
 
 No frontend, a aplicação utiliza componentes reutilizáveis e separação entre páginas, componentes, rotas e serviços de API.
 
-## 📈 Evolução do projeto
+##Evolução do projeto
 
 O ConnectCRM começou como uma aplicação focada em:
 
