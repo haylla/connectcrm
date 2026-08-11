@@ -496,6 +496,23 @@ O **ConnectCRM** é um projeto desenvolvido para aprofundar conhecimentos em des
 
 O projeto representa uma evolução de aplicações tradicionais para uma arquitetura moderna baseada em **React + Node.js + APIs REST + MySQL**, com integrações externas e automação.
 
+## Visão geral
+
+O ConnectCRM reúne em uma única aplicação:
+Tela de login: 
+<img width="1231" height="881" alt="image" src="https://github.com/user-attachments/assets/2f9f3a18-dddd-4585-b2c4-b750fb760130" />
+Dashboard:
+<img width="1223" height="839" alt="image" src="https://github.com/user-attachments/assets/69c180d8-bd92-4396-8450-812ba1757d24" />
+Contatos: 
+<img width="1223" height="842" alt="image" src="https://github.com/user-attachments/assets/8c72defd-dce0-405a-9118-896aa5066874" />
+Conversas:
+<img width="1225" height="842" alt="image" src="https://github.com/user-attachments/assets/b86aac86-d83c-4a46-a614-7498aa9c80aa" />
+Kanban:
+<img width="1361" height="836" alt="image" src="https://github.com/user-attachments/assets/ec040f6b-3cbb-48a1-838d-5238ec7e59b1" />
+cadatro de usuários:
+<img width="919" height="913" alt="image" src="https://github.com/user-attachments/assets/051a8908-048b-409b-bf9a-06e070ed511a" />
+
+
 ## ⚠️ Status
 
 🟡 **Em desenvolvimento ativo**
