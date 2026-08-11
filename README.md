@@ -31,25 +31,25 @@ O projeto está sendo desenvolvido de forma incremental, utilizando uma arquitet
 
 ## Funcionalidades
 
-### 🔐 Autenticação
+### Autenticação
 - Login de usuários.
 - Autenticação baseada em JWT.
 - Senhas protegidas com bcrypt.
 - Estrutura preparada para controle de permissões.
 
-### 👥 Usuários
+### Usuários
 - Cadastro e gerenciamento de usuários.
 - Listagem de usuários.
 - Edição e gerenciamento através da interface administrativa.
 - Estrutura preparada para diferentes perfis de acesso.
 
-### 📇 Contatos
+### Contatos
 - Cadastro de contatos.
 - Listagem de contatos.
 - Organização dos dados dos clientes.
 - Associação de contatos às empresas.
 
-### 💬 Conversas
+### Conversas
 - Lista de conversas.
 - Seleção de contato/conversa.
 - Histórico persistido no banco de dados.
@@ -58,18 +58,18 @@ O projeto está sendo desenvolvido de forma incremental, utilizando uma arquitet
 - Estrutura de conversas separada dos contatos.
 - Organização em camadas no backend.
 
-### 📱 WhatsApp
+### WhatsApp
 O projeto possui integração com serviços utilizados no fluxo de WhatsApp, incluindo a **Evolution API**, permitindo que o CRM participe do fluxo de envio e recebimento de mensagens.
 
 A arquitetura também foi pensada para integração com automações externas, incluindo fluxos com **n8n** e agentes de IA.
 
-### 📊 Dashboard
+### Dashboard
 Estrutura de dashboard para acompanhamento de indicadores e informações comerciais.
 
-### 🏷️ Pipeline / Kanban
+### Pipeline / Kanban
 O projeto possui estrutura orientada a pipeline e Kanban, com evolução planejada para gerenciamento completo das oportunidades.
 
-## 🏗️ Arquitetura
+## Arquitetura
 
 ```text
 ┌──────────────────────────────┐
@@ -134,7 +134,7 @@ MySQL
 Integração WhatsApp / Evolution API
 ```
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 ### Frontend
 - React
@@ -421,7 +421,7 @@ MySQL
 - [ ] Registro das respostas da IA no CRM
 - [ ] Atendimento híbrido IA + humano
 
-## 💡 Decisões técnicas
+## Decisões técnicas
 
 O projeto foi estruturado para evitar que a lógica de negócio fique concentrada diretamente nos controllers.
 
@@ -472,7 +472,7 @@ Empresa
 
 Essa evolução permite que o projeto avance de um CRUD de contatos para uma plataforma de **atendimento e relacionamento com clientes**.
 
-## 📚 O que este projeto demonstra
+## O que este projeto demonstra
 
 - Desenvolvimento frontend com React.
 - Desenvolvimento backend com Node.js e Express.
@@ -490,7 +490,7 @@ Essa evolução permite que o projeto avance de um CRUD de contatos para uma pla
 - Debugging e testes de API.
 - Evolução incremental de produto.
 
-## 👩‍💻 Sobre
+##  Sobre
 
 O **ConnectCRM** é um projeto desenvolvido para aprofundar conhecimentos em desenvolvimento web full stack e transformar necessidades reais de atendimento e relacionamento com clientes em uma aplicação funcional.
 
