@@ -1,4 +1,4 @@
-# 🚀 ConnectCRM
+# ConnectCRM
 
 > CRM web para gestão de contatos, conversas e atendimento integrado ao WhatsApp, desenvolvido como projeto de portfólio e evolução de uma solução SaaS.
 
@@ -9,7 +9,7 @@
 ![UI](https://img.shields.io/badge/UI-Material%20UI-007FFF)
 ![API](https://img.shields.io/badge/API-REST-000000)
 
-## 📌 Sobre o projeto
+## Sobre o projeto
 
 O **ConnectCRM** é uma aplicação web criada para centralizar o relacionamento com clientes e organizar o atendimento comercial em um único ambiente.
 
@@ -19,7 +19,7 @@ O projeto está sendo desenvolvido de forma incremental, utilizando uma arquitet
 
 > **Projeto em desenvolvimento:** algumas funcionalidades já estão implementadas e outras fazem parte do roadmap.
 
-## 🎯 Objetivos
+## Objetivos
 
 - Centralizar contatos e informações de clientes.
 - Organizar oportunidades e processos comerciais.
@@ -29,7 +29,7 @@ O projeto está sendo desenvolvido de forma incremental, utilizando uma arquitet
 - Preparar a aplicação para múltiplas empresas e usuários.
 - Criar uma base para automações e atendimento com IA.
 
-## ✨ Funcionalidades
+## Funcionalidades
 
 ### 🔐 Autenticação
 - Login de usuários.
