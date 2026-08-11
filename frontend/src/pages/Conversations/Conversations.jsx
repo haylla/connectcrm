@@ -10,6 +10,7 @@ import ChatInput from '../../components/Chat/ChatInput';
 
 function Conversations() {
     const [selectedContact, setSelectedContact] = useState(null);
+    const [selectedConversation, setSelectedConversation] = useState(null);
 
     return (
 
@@ -30,9 +31,13 @@ function Conversations() {
     }}
 >
 
-    <ContactList 
+    <ContactList
+
     setSelectedContact={setSelectedContact}
-    />
+
+    setSelectedConversation={setSelectedConversation}
+
+/>
 
     <Box
         sx={{
@@ -43,17 +48,19 @@ function Conversations() {
         }}
     >
 
-        <ChatHeader  
-        selectedContact={selectedContact}
-        />
+     <ChatHeader
+    selectedContact={selectedContact}
+    selectedConversation={selectedConversation}
+/>
 
-        <ChatBody 
-        selectedContact={selectedContact}
-        />
+        <ChatBody
+    selectedConversation={selectedConversation}
+/>
 
         <ChatInput
-        selectedContact={selectedContact}
-        />
+    selectedConversation={selectedConversation}
+    selectedContact={selectedContact}
+/>
 
     </Box>
 

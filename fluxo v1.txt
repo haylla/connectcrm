@@ -16,3 +16,53 @@
 //   ↓
 // KanbanCard
 // =====================================================
+
+
+//Arquitetura do sistema completa
+            Cliente
+                    │
+                    ▼
+               WhatsApp
+                    │
+                    ▼
+              Evolution API
+                    │
+                    ▼
+               Webhook (n8n)
+                    │
+        ┌───────────┴───────────┐
+        │                       │
+        ▼                       ▼
+   Agente IA              ConnectCRM
+ (processa mensagem)   POST /api/messages/webhook
+        │                       │
+        ▼                       ▼
+ Responde cliente        Salva no MySQL
+                                  │
+                                  ▼
+                             React atualiza
+
+
+
+                             //fluxo envio de mensagem//
+Cliente envia mensagem
+        │
+        ▼
+Webhook
+        │
+        ▼
+findByPhone()
+        │
+        ▼
+Existe conversa aberta?
+        │
+   ┌────┴────┐
+   │         │
+ NÃO        SIM
+   │         │
+   ▼         ▼
+Cria      Usa existente
+   │         │
+   └────┬────┘
+        ▼
+Grava mensagem

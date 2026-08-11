@@ -12,30 +12,86 @@ import {
 
 import api from '../../services/api';
 
-function ContactList({ setSelectedContact }) {
-        const [contacts, setContacts] = useState([]);
+function ContactList({
 
-        async function loadContacts() {
+    setSelectedContact,
 
-    try {
+    setSelectedConversation
 
-        const response = await api.get('/contacts');
+}) {
 
-        setContacts(response.data);
+    const [contacts, setContacts] = useState([]);
 
-    } catch (error) {
+    // =====================================================
+    // CARREGA TODOS OS CONTATOS
+    // =====================================================
+    async function loadContacts() {
 
-        console.error(error);
+        try {
+
+            const response = await api.get('/contacts');
+
+            setContacts(response.data);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
 
     }
 
-}
+    // =====================================================
+    // ABRE UMA CONVERSA
+    // -----------------------------------------------------
+    // Busca uma conversa existente ou cria uma nova.
+    // =====================================================
+    async function openConversation(contact) {
 
-useEffect(() => {
+        try {
 
-    loadContacts();
+            // Seleciona o contato
+            setSelectedContact(contact);
 
-}, []);
+            // Busca ou cria a conversa
+            const response = await api.post(
+
+                '/conversations',
+
+                {
+
+                    company_id: contact.company_id,
+
+                    contact_id: contact.id
+
+                }
+
+            );
+
+            // Salva a conversa selecionada
+            setSelectedConversation(
+
+                response.data
+
+            );
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    }
+
+    // =====================================================
+    // CARREGA OS CONTATOS AO ABRIR A TELA
+    // =====================================================
+    useEffect(() => {
+
+        loadContacts();
+
+    }, []);
+
     return (
 
         <Box
@@ -57,7 +113,12 @@ useEffect(() => {
                 Conversas
             </Typography>
 
-            <Box sx={{ px: 2, pb: 2 }}>
+            <Box
+                sx={{
+                    px: 2,
+                    pb: 2
+                }}
+            >
 
                 <TextField
                     fullWidth
@@ -69,28 +130,32 @@ useEffect(() => {
 
             <List>
 
-              {contacts.map((contact) => (
+                {contacts.map((contact) => (
 
-    <ListItemButton
-        key={contact.id}
-        onClick={() => setSelectedContact(contact)}
-    >
+                    <ListItemButton
+                        key={contact.id}
+                        onClick={() => openConversation(contact)}
+                    >
 
-        <Avatar sx={{ mr: 2 }}>
+                        <Avatar
+                            sx={{
+                                mr: 2
+                            }}
+                        >
 
-            {contact.name.charAt(0).toUpperCase()}
+                            {contact.name.charAt(0).toUpperCase()}
 
-        </Avatar>
+                        </Avatar>
 
-        <ListItemText
-            primary={contact.name}
-            secondary="Clique para iniciar uma conversa"
-     
-        />
+                        <ListItemText
+                            primary={contact.name}
+                            secondary="Clique para iniciar uma conversa"
+                        />
 
-    </ListItemButton>
+                    </ListItemButton>
 
-))}
+                ))}
+
             </List>
 
         </Box>

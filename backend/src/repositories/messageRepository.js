@@ -1,15 +1,23 @@
 const db = require('../config/database');
 
+// =====================================================
+// CRIAR MENSAGEM
+// =====================================================
 async function create(message) {
 
     const [result] = await db.query(
 
         `INSERT INTO messages
-        (contact_id, sender, message, created_at)
+        (
+            conversation_id,
+            sender,
+            message,
+            created_at
+        )
         VALUES (?, ?, ?, NOW())`,
 
         [
-            message.contact_id,
+            message.conversation_id,
             message.sender,
             message.message
         ]
@@ -20,16 +28,19 @@ async function create(message) {
 
 }
 
-async function findByContact(contactId) {
+// =====================================================
+// LISTAR MENSAGENS DA CONVERSA
+// =====================================================
+async function findByConversation(conversationId) {
 
     const [rows] = await db.query(
 
         `SELECT *
          FROM messages
-         WHERE contact_id = ?
+         WHERE conversation_id = ?
          ORDER BY created_at ASC`,
 
-        [contactId]
+        [conversationId]
 
     );
 
@@ -38,6 +49,9 @@ async function findByContact(contactId) {
 }
 
 module.exports = {
+
     create,
-    findByContact
+
+    findByConversation
+
 };

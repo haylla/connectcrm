@@ -5,14 +5,28 @@ const controller =
 
 const router = express.Router();
 
+// =====================================================
+// LISTAR MENSAGENS DE UM CONTATO
+// =====================================================
 router.get(
-    '/:contactId',
-    controller.findByContact
+    '/conversation/:conversationId',
+    controller.findByConversation
 );
-
+// =====================================================
+// ENVIO DE MENSAGEM PELO CRM
+// =====================================================
 router.post(
     '/',
     controller.create
+);
+
+// =====================================================
+// WEBHOOK DO N8N
+// Recebe mensagens pela IA
+// =====================================================
+router.post(
+    '/webhook',
+    controller.webhook
 );
 
 module.exports = router;

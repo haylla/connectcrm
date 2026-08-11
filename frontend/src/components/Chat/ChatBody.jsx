@@ -1,49 +1,118 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Box, Typography, Paper } from '@mui/material';
 import api from '../../services/api';
 
-function ChatBody({ selectedContact }) {
+function ChatBody({ selectedConversation }) {
 
-const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState([]);
 
-useEffect(() => {
+    // =====================================================
+    // REFERÊNCIA PARA O FINAL DA CONVERSA
+    // =====================================================
+    const messagesEndRef = useRef(null);
 
-    loadMessages();
+    // =====================================================
+    // ROLA O CHAT PARA O FINAL
+    // =====================================================
+    function scrollToBottom() {
 
-}, [selectedContact]);
+        messagesEndRef.current?.scrollIntoView({
 
-async function loadMessages() {
+            behavior: 'smooth'
 
-    if (!selectedContact) return;
+        });
 
-    const response = await api.get(
-        `/messages/${selectedContact.id}`
-    );
+    }
 
-    setMessages(response.data);
+    // =====================================================
+    // CARREGA AS MENSAGENS DA CONVERSA
+    // =====================================================
+    async function loadMessages() {
 
-}
+        try {
 
-    if (!selectedContact) {
+            const response = await api.get(
 
-    return (
+                `/messages/conversation/${selectedConversation.id}`
 
-        <Box
-            sx={{
-                flex: 1,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}
-        >
+            );
 
-            Selecione uma conversa.
+            setMessages(response.data);
 
-        </Box>
+            setTimeout(() => {
 
-    );
+                scrollToBottom();
 
-}
+            }, 100);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    }
+
+    // =====================================================
+    // ATUALIZA AS MENSAGENS AUTOMATICAMENTE
+    // =====================================================
+    useEffect(() => {
+
+        if (!selectedConversation) {
+
+            setMessages([]);
+
+            return;
+
+        }
+
+        loadMessages();
+
+        const interval = setInterval(() => {
+
+            loadMessages();
+
+        }, 2000);
+
+        return () => clearInterval(interval);
+
+    }, [selectedConversation]);
+
+    // =====================================================
+    // NENHUMA CONVERSA SELECIONADA
+    // =====================================================
+    if (!selectedConversation) {
+
+        return (
+
+            <Box
+                sx={{
+                    flex: 1,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column'
+                }}
+            >
+
+                <Typography variant="h6">
+
+                    💬 Selecione um contato
+
+                </Typography>
+
+                <Typography color="text.secondary">
+
+                    As mensagens aparecerão aqui.
+
+                </Typography>
+
+            </Box>
+
+        );
+
+    }
+
     return (
 
         <Box
@@ -62,7 +131,7 @@ async function loadMessages() {
                     sx={{
                         display: 'flex',
                         justifyContent:
-                            message.sender === 'agent'
+                            message.sender === 'USER'
                                 ? 'flex-end'
                                 : 'flex-start',
                         mb: 2
@@ -75,9 +144,9 @@ async function loadMessages() {
                             p: 2,
                             maxWidth: '70%',
                             backgroundColor:
-                                message.sender === 'client'
+                                message.sender === 'CLIENT'
                                     ? '#ffffff'
-                                    : message.sender === 'ai'
+                                    : message.sender === 'AI'
                                     ? '#e3f2fd'
                                     : '#dcf8c6'
                         }}
@@ -99,10 +168,13 @@ async function loadMessages() {
                             }}
                         >
 
-                            {new Date(message.created_at).toLocaleTimeString('pt-BR', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                            })}
+                            {new Date(message.created_at).toLocaleTimeString(
+                                'pt-BR',
+                                {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }
+                            )}
 
                         </Typography>
 
@@ -111,6 +183,8 @@ async function loadMessages() {
                 </Box>
 
             ))}
+
+            <div ref={messagesEndRef}></div>
 
         </Box>
 

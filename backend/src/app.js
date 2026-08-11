@@ -15,12 +15,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const userRoutes = require('./routes/userRoutes');
+
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/contacts', contactRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/pipeline',pipelineRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/', async (req, res) => {
 

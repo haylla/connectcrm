@@ -9,6 +9,7 @@ import Dashboard from '../pages/Dashboard/Dashboard';
 import Contacts from '../pages/Contacts/Contacts';
 import Conversations from '../pages/Conversations/Conversations';
 import Kanban from '../pages/Kanban/Kanban';
+import Users from '../pages/Users/Users';
 
 function AppRoutes() {
 
@@ -38,6 +39,10 @@ function AppRoutes() {
                 <Route
                     path="/kanban"
                     element={<Kanban />}
+                />
+                <Route
+                    path="/users"
+                    element={<Users />}
                 />
 
             </Routes>

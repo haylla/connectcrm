@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import IconButton from '@mui/material/IconButton';
 import { useState } from 'react';
+import PersonIcon from '@mui/icons-material/Person';
 import {
     Box,
     Drawer,
@@ -156,24 +157,31 @@ const [collapsed, setCollapsed] = useState(false);
 
 </ListItemButton>
 
-                <ListItemButton>
+                <ListItemButton
+    component={Link}
+    to="/users"
+    sx={{
+        mx: 1,
+        my: .5,
+        borderRadius: 2,
+        '&:hover': {
+            backgroundColor: '#334155'
+        }
+    }}
+>
 
-                <CampaignIcon sx={{mr: 2,color:'#90CAF9'}} />
+    <PersonIcon
+        sx={{
+            mr: 2,
+            color: '#90CAF9'
+        }}
+    />
 
-                {!collapsed && ( 
-                    <ListItemText primary="Campanhas" />
-                )}
-                </ListItemButton>
+    {!collapsed && (
+        <ListItemText primary="Usuários" />
+    )}
 
-              <ListItemButton>
-
-                <LogoutIcon sx={{mr: 2,color:'#90CAF9'}} />
-                
-                {!collapsed && ( 
-                <ListItemText primary="Logout"/>
-                )}
-
-                </ListItemButton>
+</ListItemButton>
 
             </List>
 <Typography

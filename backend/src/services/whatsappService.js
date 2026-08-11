@@ -1,54 +1,50 @@
 const axios = require('axios');
 
-const EVOLUTION_URL = process.env.EVOLUTION_URL;
-const EVOLUTION_API_KEY = process.env.EVOLUTION_API_KEY;
-const INSTANCE = process.env.EVOLUTION_INSTANCE;
-
+// =====================================================
+// ENVIA MENSAGEM PARA EVOLUTION API
+// =====================================================
 async function sendMessage(phone, message) {
 
-    try {
+    // Remove qualquer caractere que não seja número
+    phone = phone.replace(/\D/g, '');
 
-        const url =
-            `${EVOLUTION_URL}/message/sendText/${INSTANCE}`;
-                    console.log('========== EVOLUTION ==========');
-            console.log('URL:', url);
-            console.log('API KEY:', EVOLUTION_API_KEY);
-            console.log('INSTANCE:', INSTANCE);
-            console.log('PHONE:', phone);
-            console.log('MESSAGE:', message);
-            console.log('===============================');
-        const response = await axios.post(
-            url,
-            {
-                number: phone,
-                text: message
-            },
-            {
-                headers: {
-                    apikey: EVOLUTION_API_KEY,
-                    'Content-Type': 'application/json'
-                }
+    const url =
+        `${process.env.EVOLUTION_URL}/message/sendText/${process.env.EVOLUTION_INSTANCE}`;
+
+    console.log('==========================');
+    console.log('ENVIANDO PARA EVOLUTION');
+    console.log('URL:', url);
+    console.log('PHONE:', phone);
+    console.log('MESSAGE:', message);
+    console.log('==========================');
+
+    const response = await axios.post(
+
+        url,
+
+        {
+            number: phone,
+            text: message
+        },
+
+        {
+            headers: {
+                apikey: process.env.EVOLUTION_API_KEY,
+                'Content-Type': 'application/json'
             }
-        );
-
-        return response.data;
-
-    } catch (error) {
-
-        console.error('Erro Evolution:');
-
-        if (error.response) {
-            console.error(error.response.data);
-        } else {
-            console.error(error.message);
         }
 
-        throw error;
+    );
 
-    }
+    console.log('RESPOSTA EVOLUTION:');
+    console.log(response.data);
+
+    return response.data;
 
 }
 
 module.exports = {
+
     sendMessage
+
 };

@@ -3,43 +3,70 @@ import {
     Button,
     TextField
 } from '@mui/material';
+
 import { useState } from 'react';
+
 import api from '../../services/api';
 
-function ChatInput({ selectedContact }) {
-async function sendMessage() {
+function ChatInput({
 
-    if (!selectedContact) {
+    selectedConversation,
 
-    alert('Selecione um contato.');
+    selectedContact
 
-    return;
+}) {
 
-}
+    const [message, setMessage] = useState('');
 
-    if (!message.trim()) return;
+    // =====================================================
+    // ENVIA UMA MENSAGEM
+    // =====================================================
+    async function sendMessage() {
 
-    try {
+        if (!selectedConversation || !selectedContact) {
 
-        await api.post ('/messages', {
+            alert('Selecione uma conversa.');
 
-            contact_id: selectedContact.id,
-            sender: 'agent',
-            message: message
+            return;
 
-        });
-        setMessage('');
-         window.location.reload();
+        }
 
-    } catch (error) {
+        if (!message.trim()) {
 
-        console.error(error);
+            return;
+
+        }
+
+        try {
+
+            await api.post(
+
+                '/messages',
+
+                {
+
+                    company_id: selectedContact.company_id,
+
+                    contact_id: selectedContact.id,
+
+                    sender: 'USER',
+
+                    message: message
+
+                }
+
+            );
+
+            setMessage('');
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
 
     }
 
-}
-
-    const [message, setMessage] = useState('');
     return (
 
         <Box
@@ -52,16 +79,17 @@ async function sendMessage() {
             }}
         >
 
-           <TextField
-            fullWidth
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Digite uma mensagem..."
-        />
+            <TextField
+                fullWidth
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Digite uma mensagem..."
+            />
+
             <Button
-            variant="contained"
-            onClick={sendMessage}
-        >
+                variant="contained"
+                onClick={sendMessage}
+            >
 
                 Enviar
 
