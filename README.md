@@ -501,7 +501,7 @@ O projeto representa uma evolução de aplicações tradicionais para uma arquit
 ## O ConnectCRM reúne em uma única aplicação:
 
 Tela de login: 
-<img width="1231" height="881" alt="image" src="https://github.com/user-attachments/assets/2f9f3a18-dddd-4585-b2c4-b750fb760130" />
+<img width="997" height="944" alt="image" src="https://github.com/user-attachments/assets/547d4dc1-15f7-40d8-b563-c79a847f2fba" />
 Dashboard:
 <img width="1223" height="839" alt="image" src="https://github.com/user-attachments/assets/69c180d8-bd92-4396-8450-812ba1757d24" />
 Contatos: 
