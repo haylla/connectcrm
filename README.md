@@ -503,15 +503,16 @@ O projeto representa uma evolução de aplicações tradicionais para uma arquit
 Tela de login: 
 <img width="997" height="944" alt="image" src="https://github.com/user-attachments/assets/547d4dc1-15f7-40d8-b563-c79a847f2fba" />
 Dashboard:
-<img width="1223" height="839" alt="image" src="https://github.com/user-attachments/assets/69c180d8-bd92-4396-8450-812ba1757d24" />
+<img width="1000" height="955" alt="image" src="https://github.com/user-attachments/assets/6e698946-d0f6-448b-9305-ae63077980c6" />
 Contatos: 
-<img width="1223" height="842" alt="image" src="https://github.com/user-attachments/assets/8c72defd-dce0-405a-9118-896aa5066874" />
+<img width="1072" height="950" alt="image" src="https://github.com/user-attachments/assets/df1d3b25-45de-4d1a-aef9-3bc4c09c734b" />
 Conversas:
-<img width="1225" height="842" alt="image" src="https://github.com/user-attachments/assets/b86aac86-d83c-4a46-a614-7498aa9c80aa" />
+<img width="1296" height="955" alt="image" src="https://github.com/user-attachments/assets/aed15e47-036a-4765-b22e-2891313224a9" />
 Kanban:
-<img width="1361" height="836" alt="image" src="https://github.com/user-attachments/assets/ec040f6b-3cbb-48a1-838d-5238ec7e59b1" />
+<img width="1292" height="953" alt="image" src="https://github.com/user-attachments/assets/9c0f2583-7079-4944-8484-087050d3e619" />
 Cadatro de Usuários:
-<img width="919" height="913" alt="image" src="https://github.com/user-attachments/assets/051a8908-048b-409b-bf9a-06e070ed511a" />
+<img width="1294" height="949" alt="image" src="https://github.com/user-attachments/assets/b37df923-4c51-4c15-a2cd-c3c4eebd261a" />
+
 
 
 ## ⚠️ Status
