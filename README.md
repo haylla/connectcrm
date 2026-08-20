@@ -503,7 +503,7 @@ O projeto representa uma evolução de aplicações tradicionais para uma arquit
 Tela de login: 
 <img width="997" height="944" alt="image" src="https://github.com/user-attachments/assets/547d4dc1-15f7-40d8-b563-c79a847f2fba" />
 Dashboard:
-<img width="1000" height="955" alt="image" src="https://github.com/user-attachments/assets/6e698946-d0f6-448b-9305-ae63077980c6" />
+<img width="1600" height="804" alt="image" src="https://github.com/user-attachments/assets/d75be982-c862-40b0-b392-8030b19f27b2" />
 Contatos: 
 <img width="1072" height="950" alt="image" src="https://github.com/user-attachments/assets/df1d3b25-45de-4d1a-aef9-3bc4c09c734b" />
 Conversas:
