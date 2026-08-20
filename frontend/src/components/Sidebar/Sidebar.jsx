@@ -2,204 +2,422 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import ChatIcon from '@mui/icons-material/Chat';
 import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
-import CampaignIcon from '@mui/icons-material/Campaign';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { Link } from 'react-router-dom';
-import MenuIcon from '@mui/icons-material/Menu';
-import IconButton from '@mui/material/IconButton';
-import { useState } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
+import MenuIcon from '@mui/icons-material/Menu';
+import LogoutIcon from '@mui/icons-material/Logout';
+
+import Avatar from '@mui/material/Avatar';
+
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+
 import {
     Box,
-    Drawer,
+    IconButton,
     List,
     ListItemButton,
     ListItemText,
     Typography
 } from '@mui/material';
 
-function Sidebar() {
-const [collapsed, setCollapsed] = useState(false);
-    return (
-        <Drawer
-            variant="permanent"
-           sx={{
-                width: collapsed ? 80 : 240,
-                flexShrink: 0,
 
-            '& .MuiDrawer-paper': {
-                width: collapsed ? 80 : 240,
+function Sidebar() {
+
+    const [collapsed, setCollapsed] = useState(false);
+
+    const sidebarWidth = collapsed ? 80 : 240;
+
+    const user = JSON.parse(
+        localStorage.getItem('user')
+    );
+    const isAdmin = user?.role === 'ADMIN';
+
+    const isSupervisor =
+        user?.role === 'SUPERVISOR';
+
+    const isAgent =
+        user?.role === 'AGENT';
+        
+
+
+    function handleLogout() {
+
+        localStorage.removeItem('token');
+
+        localStorage.removeItem('user');
+
+        window.location.href = '/';
+
+    }
+
+
+    return (
+
+        <Box
+            component="aside"
+            sx={{
+                width: sidebarWidth,
+                minWidth: sidebarWidth,
+                height: '100vh',
                 backgroundColor: '#1E293B',
                 color: '#FFFFFF',
-                borderRight: 'none',
-                boxSizing: 'border-box'
-    }
-}}
+                display: 'flex',
+                flexDirection: 'column',
+                boxSizing: 'border-box',
+                transition: 'width 0.2s ease'
+            }}
         >
-<Box
-    sx={{
-        display: 'flex',
-        justifyContent:'flex-start'
-        ,
-        alignItems: 'center',
-        p: 2
-    }}
->
 
-{!collapsed && (
+            {/* =====================================================
+                CABEÇALHO
+            ===================================================== */}
 
-<Typography
-    variant="h6"
-    fontWeight="bold"
->
-    ConnectCRM
-</Typography>
-    )}
- <IconButton
-        onClick={() => setCollapsed(!collapsed)}
-        sx={{ color: '#fff' }}
-    >
-    <MenuIcon />
-
-</IconButton>
-    
-</Box>
-            <List>
-
-                <ListItemButton
-                component={Link}
-                to="/dashboard"
+            <Box
                 sx={{
-                mx: 1,
-                my: .5,
-                borderRadius: 2,
-
-                '&:hover': {
-                    backgroundColor: '#334155'
-    }
-}}
-            >   
-                <DashboardIcon sx={{mr: 2,color:'#90CAF9'}} />
-
-{!collapsed && (
-
-    <ListItemText
-        primary="Dashboard"
-    />
-
-)}
-                </ListItemButton>
-
-               <ListItemButton
-                    component={Link}
-                    to="/contacts"
-                                   sx={{
-                mx: 1,
-                my: .5,
-                borderRadius: 2,
-
-                '&:hover': {
-                    backgroundColor: '#334155'
-    }
-}}
-                >
-                    <PeopleIcon sx={{mr: 2,color:'#90CAF9'}} />
-
-                   {!collapsed && (
-                    <ListItemText
-                        primary="Contatos"
-                    />
-                )}
-                </ListItemButton>
-                <ListItemButton
-                component={Link}
-                to="/conversations"
-                               sx={{
-                mx: 1,
-                my: .5,
-                borderRadius: 2,
-
-                '&:hover': {
-                    backgroundColor: '#334155'
-    }
-}}
+                    height: 70,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: collapsed
+                        ? 'center'
+                        : 'space-between',
+                    px: 2,
+                    boxSizing: 'border-box'
+                }}
             >
-                <ChatIcon sx={{mr: 2,color:'#90CAF9'}} />
 
                 {!collapsed && (
-                <ListItemText primary="Conversas"/>
+
+                    <Typography
+                        variant="h6"
+                        fontWeight="bold"
+                    >
+                        ConnectCRM
+                    </Typography>
+
                 )}
-                </ListItemButton>
 
-               <ListItemButton
-    component={Link}
-    to="/kanban"
-    sx={{
-        mx: 1,
-        my: .5,
-        borderRadius: 2,
-        '&:hover': {
-            backgroundColor: '#334155'
-        }
-    }}
->
+                <IconButton
+                    onClick={() => setCollapsed(!collapsed)}
+                    sx={{
+                        color: '#FFFFFF'
+                    }}
+                >
 
-    <ViewKanbanIcon
-        sx={{
-            mr:2,
-            color:'#90CAF9'
-        }}
-    />
+                    <MenuIcon />
 
-    {!collapsed && (
-        <ListItemText primary="Kanban" />
-    )}
+                </IconButton>
 
-</ListItemButton>
+            </Box>
+
+
+            {/* =====================================================
+                MENU
+            ===================================================== */}
+
+            <List
+                sx={{
+                    px: 1
+                }}
+            >
+
+                {/* DASHBOARD */}
 
                 <ListItemButton
-    component={Link}
-    to="/users"
-    sx={{
-        mx: 1,
-        my: .5,
-        borderRadius: 2,
-        '&:hover': {
-            backgroundColor: '#334155'
-        }
-    }}
->
+                    component={Link}
+                    to="/dashboard"
+                    sx={{
+                        my: 0.5,
+                        borderRadius: 2,
 
-    <PersonIcon
+                        '&:hover': {
+                            backgroundColor: '#334155'
+                        }
+                    }}
+                >
+
+                    <DashboardIcon
+                        sx={{
+                            mr: collapsed ? 0 : 2,
+                            color: '#90CAF9'
+                        }}
+                    />
+
+                    {!collapsed && (
+
+                        <ListItemText
+                            primary="Dashboard"
+                        />
+
+                    )}
+
+                </ListItemButton>
+
+
+                {/* CONTATOS */}
+
+                {(isAdmin || isSupervisor) && (
+
+    <ListItemButton
+        component={Link}
+        to="/contacts"
         sx={{
-            mr: 2,
-            color: '#90CAF9'
+            my: 0.5,
+            borderRadius: 2,
+
+            '&:hover': {
+                backgroundColor: '#334155'
+            }
         }}
-    />
+    >
 
-    {!collapsed && (
-        <ListItemText primary="Usuários" />
-    )}
+        <PeopleIcon
+            sx={{
+                mr: collapsed ? 0 : 2,
+                color: '#90CAF9'
+            }}
+        />
 
-</ListItemButton>
+        {!collapsed && (
+            <ListItemText
+                primary="Contatos"
+            />
+        )}
+
+    </ListItemButton>
+
+)}
+                {/* CONVERSAS */}
+
+                <ListItemButton
+                    component={Link}
+                    to="/conversations"
+                    sx={{
+                        my: 0.5,
+                        borderRadius: 2,
+
+                        '&:hover': {
+                            backgroundColor: '#334155'
+                        }
+                    }}
+                >
+
+                    <ChatIcon
+                        sx={{
+                            mr: collapsed ? 0 : 2,
+                            color: '#90CAF9'
+                        }}
+                    />
+
+                    {!collapsed && (
+
+                        <ListItemText
+                            primary="Conversas"
+                        />
+
+                    )}
+
+                </ListItemButton>
+
+
+                {/* KANBAN */}
+
+                <ListItemButton
+                    component={Link}
+                    to="/kanban"
+                    sx={{
+                        my: 0.5,
+                        borderRadius: 2,
+
+                        '&:hover': {
+                            backgroundColor: '#334155'
+                        }
+                    }}
+                >
+
+                    <ViewKanbanIcon
+                        sx={{
+                            mr: collapsed ? 0 : 2,
+                            color: '#90CAF9'
+                        }}
+                    />
+
+                    {!collapsed && (
+
+                        <ListItemText
+                            primary="Kanban"
+                        />
+
+                    )}
+
+                </ListItemButton>
+
+
+                {/* USUÁRIOS */}
+
+                <ListItemButton
+                    component={Link}
+                    to="/users"
+                    sx={{
+                        my: 0.5,
+                        borderRadius: 2,
+
+                        '&:hover': {
+                            backgroundColor: '#334155'
+                        }
+                    }}
+                >
+
+                    <PersonIcon
+                        sx={{
+                            mr: collapsed ? 0 : 2,
+                            color: '#90CAF9'
+                        }}
+                    />
+
+                    {!collapsed && (
+
+                        <ListItemText
+                            primary="Usuários"
+                        />
+
+                    )}
+
+                </ListItemButton>
 
             </List>
-<Typography
-    variant="caption"
-    sx={{
-        mt: 'auto',
-        p: 2,
-        textAlign: 'center',
-        color: '#94A3B8'
-    }}
->
 
-    ConnectCRM v1.0
 
-</Typography>
-        </Drawer>
+            {/* =====================================================
+                ÁREA INFERIOR
+            ===================================================== */}
+
+            <Box
+                sx={{
+                    marginTop: 'auto',
+                    px: 1,
+                    pb: 1
+                }}
+            >
+
+                {/* =================================================
+                    USUÁRIO LOGADO
+                ================================================= */}
+
+                {!collapsed && (
+
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1.5,
+                            px: 1,
+                            py: 1.5
+                        }}
+                    >
+
+                        <Avatar
+                            sx={{
+                                width: 36,
+                                height: 36,
+                                backgroundColor: '#1976d2'
+                            }}
+                        >
+                            {user?.name?.charAt(0).toUpperCase()}
+                        </Avatar>
+
+
+                        <Box
+                            sx={{
+                                overflow: 'hidden'
+                            }}
+                        >
+
+                            <Typography
+                                variant="body2"
+                                fontWeight="bold"
+                                noWrap
+                            >
+                                {user?.name}
+                            </Typography>
+
+
+                            <Typography
+                                variant="caption"
+                                sx={{
+                                    color: '#94A3B8'
+                                }}
+                            >
+                                {user?.role}
+                            </Typography>
+
+                        </Box>
+
+                    </Box>
+
+                )}
+
+
+                {/* =================================================
+                    LOGOUT
+                ================================================= */}
+
+                <ListItemButton
+                    onClick={handleLogout}
+                    sx={{
+                        my: 0.5,
+                        borderRadius: 2,
+
+                        justifyContent: collapsed
+                            ? 'center'
+                            : 'flex-start',
+
+                        '&:hover': {
+                            backgroundColor: '#334155'
+                        }
+                    }}
+                >
+
+                    <LogoutIcon
+                        sx={{
+                            mr: collapsed ? 0 : 2,
+                            color: '#90CAF9'
+                        }}
+                    />
+
+                    {!collapsed && (
+
+                        <ListItemText
+                            primary="Sair"
+                        />
+
+                    )}
+
+                </ListItemButton>
+
+
+                {/* =================================================
+                    VERSÃO
+                ================================================= */}
+
+                <Typography
+                    variant="caption"
+                    sx={{
+                        display: 'block',
+                        pt: 1,
+                        textAlign: 'center',
+                        color: '#94A3B8'
+                    }}
+                >
+                    ConnectCRM v1.0
+                </Typography>
+
+            </Box>
+
+        </Box>
+
     );
 
 }
+
 
 export default Sidebar;

@@ -1,11 +1,28 @@
 import {
     Box,
-    Typography
+    Typography,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Chip,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button,
+    MenuItem,
+    TextField
 } from '@mui/material';
 
-import { useEffect, useState } from 'react';
+import {
+    useEffect,
+    useState
+} from 'react';
 
-import Sidebar from '../../components/Sidebar/Sidebar';
 import DashboardCard from '../../pages/Dashboard/DashboardCard';
 
 import api from '../../services/api';
@@ -14,20 +31,126 @@ import PeopleIcon from '@mui/icons-material/People';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import ChatIcon from '@mui/icons-material/Chat';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+
+// =====================================================
+// FORMATAÇÃO DE STATUS
+// =====================================================
+
+function getStatusChip(status) {
+
+    const statusMap = {
+
+        NEW: {
+            label: 'Novo',
+            color: 'info'
+        },
+
+        IN_PROGRESS: {
+            label: 'Em atendimento',
+            color: 'primary'
+        },
+
+        PROPOSAL: {
+            label: 'Proposta',
+            color: 'warning'
+        },
+
+        NEGOTIATION: {
+            label: 'Negociação',
+            color: 'secondary'
+        },
+
+        WAITING_CLIENT: {
+            label: 'Aguardando cliente',
+            color: 'warning'
+        },
+
+        WAITING_SUPPLIER: {
+            label: 'Aguardando fornecedor',
+            color: 'default'
+        },
+
+        RESOLVED: {
+            label: 'Resolvido',
+            color: 'success'
+        },
+
+        CLOSED: {
+            label: 'Fechado',
+            color: 'success'
+        },
+
+        LOST: {
+            label: 'Perdido',
+            color: 'error'
+        }
+
+    };
 
 
+    const config =
+        statusMap[status] || {
+            label: status,
+            color: 'default'
+        };
+
+
+    return (
+        <Chip
+            label={config.label}
+            color={config.color}
+            size="small"
+            variant="outlined"
+        />
+    );
+
+}
 function Dashboard() {
 
     const user = JSON.parse(
         localStorage.getItem('user')
     );
 
-    const [stats, setStats] = useState({
+
+    const [dashboard, setDashboard] = useState({
+
         contacts: 0,
-        leads: 0,
-        andamento: 0,
-        fechados: 0
+
+        stats: {
+
+            total: 0,
+            novos: 0,
+            andamento: 0,
+            propostas: 0,
+            negociacoes: 0,
+            aguardando_cliente: 0,
+            aguardando_retorno: 0,
+            resolvidos: 0,
+            fechados: 0,
+            perdidos: 0
+
+        },
+
+
+        byUser: [],
+
+        recent: []
+
     });
+
+    const [openUnassigned, setOpenUnassigned] = useState(false);
+
+    const [unassignedList, setUnassignedList] = useState([]);
+
+    const [users, setUsers] = useState([]);
+
+    const [selectedUser, setSelectedUser] = useState('');
+
+
+    // =====================================================
+    // CARREGAR DASHBOARD
+    // =====================================================
 
     async function loadStats() {
 
@@ -35,6 +158,7 @@ function Dashboard() {
 
             const token =
                 localStorage.getItem('token');
+
 
             const response =
                 await api.get(
@@ -47,100 +171,783 @@ function Dashboard() {
                     }
                 );
 
-            setStats(response.data);
+
+            setDashboard(
+                response.data
+            );
+
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                'Erro ao carregar dashboard:',
+                error
+            );
 
         }
 
     }
 
+// =====================================================
+// ABRIR FILA DE ATENDIMENTOS
+// =====================================================
+
+async function loadUnassigned() {
+
+    try {
+
+        const token =
+            localStorage.getItem('token');
+
+
+        const response =
+            await api.get(
+                '/dashboard/unassigned',
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+
+        setUnassignedList(
+            response.data
+        );
+
+
+        const usersResponse =
+            await api.get(
+                '/users',
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+
+        setUsers(
+            usersResponse.data
+        );
+
+
+        setOpenUnassigned(true);
+
+
+    } catch (error) {
+
+        console.error(
+            'Erro ao carregar fila:',
+            error
+        );
+
+    }
+
+}
+// =====================================================
+// ATRIBUIR ATENDIMENTO
+// =====================================================
+
+async function assignUser(atendimentoId) {
+
+    if (!selectedUser) {
+
+        alert(
+            'Selecione um atendente.'
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const token =
+            localStorage.getItem('token');
+
+
+        await api.patch(
+            `/atendimentos/${atendimentoId}/responsavel`,
+            {
+                assigned_user_id:
+                    selectedUser
+            },
+            {
+                headers: {
+                    Authorization:
+                        `Bearer ${token}`
+                }
+            }
+        );
+
+
+        // Recarrega o Dashboard
+        await loadStats();
+
+
+        // Recarrega a fila
+        const response =
+            await api.get(
+                '/dashboard/unassigned',
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+
+        setUnassignedList(
+            response.data
+        );
+
+
+        setSelectedUser('');
+
+
+    } catch (error) {
+
+        console.error(
+            'Erro ao atribuir atendimento:',
+            error
+        );
+
+
+        alert(
+            error.response?.data?.error ||
+            'Erro ao atribuir atendimento.'
+        );
+
+    }
+
+}
+    // =====================================================
+    // CARREGAR AO ABRIR A PÁGINA
+    // =====================================================
+
     useEffect(() => {
+
         loadStats();
+
     }, []);
 
-    return (
-        <Box sx={{ display: 'flex' }}>
 
-            <Sidebar />
+    return (
+
+        <Box
+            sx={{
+                width: '100%',
+                minHeight: '100vh',
+                p: 4,
+                boxSizing: 'border-box'
+            }}
+        >
+
+            {/* =====================================================
+                TÍTULO
+            ===================================================== */}
+
+            <Typography
+                variant="h4"
+                gutterBottom
+            >
+                Dashboard
+            </Typography>
+
+
+            {/* =====================================================
+                BOAS-VINDAS
+            ===================================================== */}
+
+            <Box
+                mb={4}
+            >
+
+                <Typography
+                    variant="h5"
+                    fontWeight="bold"
+                >
+                    Olá, {user?.name}
+                </Typography>
+
+
+                <Typography
+                    color="text.secondary"
+                    mt={1}
+                >
+                    Bem-vinda ao ConnectCRM.
+                    Acompanhe seus indicadores em tempo real.
+                </Typography>
+
+            </Box>
+
+
+            {/* =====================================================
+                INDICADORES
+            ===================================================== */}
 
             <Box
                 sx={{
-                    flex: 1,
-                    padding: 4
+                    display: 'grid',
+
+                    gridTemplateColumns: {
+                        xs: '1fr',
+                        sm: 'repeat(2, 1fr)',
+                        lg: 'repeat(4, 1fr)'
+                    },
+
+                    gap: 3,
+
+                    marginTop: 4
                 }}
             >
+
+                <DashboardCard
+                    title="Contatos"
+                    value={dashboard.contacts}
+                    subtitle="Total de contatos"
+                    icon={
+                        <PeopleIcon
+                            fontSize="large"
+                        />
+                    }
+                />
+
+
+                <DashboardCard
+                    title="Novos"
+                    value={dashboard.stats.novos}
+                    subtitle="Novos atendimentos"
+                    icon={
+                        <TrendingUpIcon
+                            fontSize="large"
+                        />
+                    }
+                />
+
+
+                <DashboardCard
+                    title="Em atendimento"
+                    value={dashboard.stats.andamento}
+                    subtitle="Atendimentos ativos"
+                    icon={
+                        <ChatIcon
+                            fontSize="large"
+                        />
+                    }
+                />
+
+
+                <DashboardCard
+                    title="Propostas"
+                    value={dashboard.stats.propostas}
+                    subtitle="Em proposta"
+                    icon={
+                        <TrendingUpIcon
+                            fontSize="large"
+                        />
+                    }
+                />
+
+
+                <DashboardCard
+                    title="Negociação"
+                    value={dashboard.stats.negociacoes}
+                    subtitle="Em negociação"
+                    icon={
+                        <TrendingUpIcon
+                            fontSize="large"
+                        />
+                    }
+                />
+
+
+                <DashboardCard
+                    title="Aguardando cliente"
+                    value={dashboard.stats.aguardando_cliente}
+                    subtitle="Aguardando retorno"
+                    icon={
+                        <ChatIcon
+                            fontSize="large"
+                        />
+                    }
+                />
+
+
+                <DashboardCard
+                    title="Fechados"
+                    value={dashboard.stats.fechados}
+                    subtitle="Atendimentos concluídos"
+                    icon={
+                        <CheckCircleIcon
+                            fontSize="large"
+                        />
+                    }
+                />
+
+
+                <DashboardCard
+                    title="Perdidos"
+                    value={dashboard.stats.perdidos}
+                    subtitle="Não convertidos"
+                    icon={
+                        <CheckCircleIcon
+                            fontSize="large"
+                        />
+                    }
+                />
+
+            </Box>
+{/* =====================================================
+    ATENDIMENTOS SEM RESPONSÁVEL
+===================================================== */}
+
+<Box
+    sx={{
+        mt: 4,
+        cursor: 'pointer'
+    }}
+    onClick={loadUnassigned}
+>
+    <Paper
+        sx={{
+            p: 2.5,
+            borderRadius: 3,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            border: dashboard.unassigned > 0
+                ? '1px solid #f59e0b'
+                : '1px solid #e5e7eb'
+        }}
+    >
+
+        <Box
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2
+            }}
+        >
+
+            <WarningAmberIcon
+                sx={{
+                    color:
+                        dashboard.unassigned > 0
+                            ? '#f59e0b'
+                            : '#94a3b8',
+                    fontSize: 32
+                }}
+            />
+
+            <Box>
+
                 <Typography
-                    variant="h4"
-                    gutterBottom
+                    fontWeight="bold"
                 >
-                    Dashboard
+                    Atendimentos sem responsável
                 </Typography>
 
-                <Box mb={4}>
-
-    <Typography
-        variant="h5"
-        fontWeight="bold"
-    >
-        Olá, {user?.name}
-    </Typography>
-
-    <Typography
-        color="text.secondary"
-        mt={1}
-    >
-        Bem-vinda ao ConnectCRM.
-        Acompanhe seus indicadores em tempo real.
-    </Typography>
-
-</Box>
-
-                <Box
-                sx={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                gap: 3,
-                marginTop: 4
-                 }}
->
-
-                    <DashboardCard
-                        title="Contatos"
-                        value={stats.contacts}
-                        subtitle="Atualizado agora"
-                        icon={<PeopleIcon fontSize="large" />}
-                    />
-
-                    <DashboardCard
-                        title="Leads"
-                        value={stats.leads}
-                        subtitle="Este mês"
-                        icon={<TrendingUpIcon fontSize="large" />}
-                    />
-
-                    <DashboardCard
-                        title="Em andamento"
-                        value={stats.andamento}
-                        subtitle="Atendimentos"
-                        icon={<ChatIcon fontSize="large" />}
-                    />
-
-                   <DashboardCard
-                        title="Fechados"
-                        value={stats.fechados}
-                        subtitle="Concluídos"
-                        icon={<CheckCircleIcon fontSize="large" />}
-                    />
-
-                </Box>
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                >
+                    Atendimentos abertos aguardando distribuição
+                </Typography>
 
             </Box>
 
         </Box>
+
+
+        <Typography
+            variant="h4"
+            fontWeight="bold"
+            sx={{
+                color:
+                    dashboard.unassigned > 0
+                        ? '#f59e0b'
+                        : '#64748b'
+            }}
+        >
+            {dashboard.unassigned}
+        </Typography>
+
+    </Paper>
+</Box>
+{/* =====================================================
+    DIALOG - DISTRIBUIÇÃO DE ATENDIMENTOS
+===================================================== */}
+
+<Dialog
+    open={openUnassigned}
+    onClose={() => setOpenUnassigned(false)}
+    fullWidth
+    maxWidth="md"
+>
+
+    <DialogTitle>
+        Atendimentos aguardando distribuição
+    </DialogTitle>
+
+
+    <DialogContent>
+
+        {unassignedList.length === 0 ? (
+
+            <Typography
+                color="text.secondary"
+                sx={{ py: 3 }}
+            >
+                Não existem atendimentos aguardando distribuição.
+            </Typography>
+
+        ) : (
+
+            unassignedList.map(
+                (item) => (
+
+                    <Paper
+                        key={item.id}
+                        sx={{
+                            p: 2,
+                            mb: 2,
+                            borderRadius: 2
+                        }}
+                    >
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                gap: 2
+                            }}
+                        >
+
+                            <Box>
+
+                                <Typography
+                                    fontWeight="bold"
+                                >
+                                    {item.contact_name}
+                                </Typography>
+
+                                <Typography
+                                    variant="body2"
+                                    color="text.secondary"
+                                >
+                                    {item.contact_phone}
+                                </Typography>
+
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 1,
+                                        mt: 1
+                                    }}
+                                >
+
+                                    <Chip
+                                        label={item.type}
+                                        size="small"
+                                    />
+
+                                    {getStatusChip(
+                                        item.status
+                                    )}
+
+                                    <Chip
+                                        label={item.priority}
+                                        size="small"
+                                        variant="outlined"
+                                    />
+
+                                </Box>
+
+                            </Box>
+
+
+                            <TextField
+                                select
+                                label="Responsável"
+                                value={selectedUser}
+                                onChange={(event) =>
+                                    setSelectedUser(
+                                        event.target.value
+                                    )
+                                }
+                                sx={{
+                                    minWidth: 220
+                                }}
+                            >
+
+                                <MenuItem value="">
+                                    Selecionar atendente
+                                </MenuItem>
+
+                                {users.map(
+                                    (user) => (
+
+                                        <MenuItem
+                                            key={user.id}
+                                            value={user.id}
+                                        >
+                                            {user.name}
+                                        </MenuItem>
+
+                                    )
+                                )}
+
+                            </TextField>
+                            <Button
+                                    variant="contained"
+                                    onClick={() =>
+                                        assignUser(item.id)
+                                    }
+                                >
+                                    Atribuir
+                                </Button>
+
+                            </Box>
+
+                    </Paper>
+
+                )
+            )
+
+        )}
+
+    </DialogContent>
+
+
+    <DialogActions>
+
+        <Button
+            onClick={() =>
+                setOpenUnassigned(false)
+            }
+        >
+            Fechar
+        </Button>
+
+    </DialogActions>
+
+</Dialog>
+            {/* =====================================================
+                DESEMPENHO DA EQUIPE
+            ===================================================== */}
+
+            <Paper
+                sx={{
+                    mt: 5,
+                    p: 3,
+                    borderRadius: 3
+                }}
+            >
+
+                <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    mb={2}
+                >
+                    Desempenho da equipe
+                </Typography>
+
+
+                <TableContainer>
+
+                    <Table>
+
+                        <TableHead>
+
+                            <TableRow>
+
+                                <TableCell>
+                                    Atendente
+                                </TableCell>
+
+                                <TableCell align="center">
+                                    Total
+                                </TableCell>
+
+                                <TableCell align="center">
+                                    Em atendimento
+                                </TableCell>
+
+                                <TableCell align="center">
+                                    Propostas
+                                </TableCell>
+
+                                <TableCell align="center">
+                                    Negociação
+                                </TableCell>
+
+                                <TableCell align="center">
+                                    Fechados
+                                </TableCell>
+
+                            </TableRow>
+
+                        </TableHead>
+
+
+                        <TableBody>
+
+                            {dashboard.byUser.map(
+                                (item) => (
+
+                                    <TableRow
+                                        key={item.user_id}
+                                    >
+
+                                        <TableCell>
+                                            {item.user_name}
+                                        </TableCell>
+
+                                        <TableCell align="center">
+                                            {item.total}
+                                        </TableCell>
+
+                                        <TableCell align="center">
+                                            {item.andamento}
+                                        </TableCell>
+
+                                        <TableCell align="center">
+                                            {item.propostas}
+                                        </TableCell>
+
+                                        <TableCell align="center">
+                                            {item.negociacoes}
+                                        </TableCell>
+
+                                        <TableCell align="center">
+                                            {item.fechados}
+                                        </TableCell>
+
+                                    </TableRow>
+
+                                )
+                            )}
+
+                        </TableBody>
+
+                    </Table>
+
+                </TableContainer>
+
+            </Paper>
+
+
+            {/* =====================================================
+                ATENDIMENTOS RECENTES
+            ===================================================== */}
+
+            <Paper
+                sx={{
+                    mt: 4,
+                    p: 3,
+                    borderRadius: 3
+                }}
+            >
+
+                <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    mb={2}
+                >
+                    Atendimentos recentes
+                </Typography>
+
+
+                <TableContainer>
+
+                    <Table>
+
+                        <TableHead>
+
+                            <TableRow>
+
+                                <TableCell>
+                                    Cliente
+                                </TableCell>
+
+                                <TableCell>
+                                    Tipo
+                                </TableCell>
+
+                                <TableCell>
+                                    Responsável
+                                </TableCell>
+
+                                <TableCell>
+                                    Status
+                                </TableCell>
+
+                                <TableCell>
+                                    Prioridade
+                                </TableCell>
+
+                            </TableRow>
+
+                        </TableHead>
+
+
+                        <TableBody>
+
+                            {dashboard.recent.map(
+                                (item) => (
+
+                                    <TableRow
+                                        key={item.id}
+                                    >
+
+                                        <TableCell>
+                                            {item.contact_name}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {item.type}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {
+                                                item.assigned_user_name
+                                                || 'Não atribuído'
+                                            }
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {getStatusChip(item.status)}
+                                        </TableCell>
+
+                                        <TableCell>
+                                            {item.priority}
+                                        </TableCell>
+
+                                    </TableRow>
+
+                                )
+                            )}
+
+                        </TableBody>
+
+                    </Table>
+
+                </TableContainer>
+
+            </Paper>
+
+        </Box>
+
     );
+
 }
+
 
 export default Dashboard;

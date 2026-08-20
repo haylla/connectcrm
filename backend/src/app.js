@@ -9,6 +9,7 @@ const contactRoutes = require('./routes/contactRoutes');
 const whatsappRoutes = require('./routes/whatsappRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const pipelineRoutes = require('./routes/pipelineRoutes');
+const atendimentoRoutes = require('./routes/atendimentoRoutes');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/pipeline',pipelineRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/atendimentos',atendimentoRoutes);
 
 app.get('/', async (req, res) => {
 

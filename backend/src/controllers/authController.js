@@ -1,6 +1,10 @@
 const authService =
     require('../services/authService');
 
+
+// =====================================================
+// REGISTRAR USUÁRIO
+// =====================================================
 async function register(req, res) {
 
     try {
@@ -23,9 +27,10 @@ async function register(req, res) {
 
 }
 
-module.exports = {
-    register
-};
+
+// =====================================================
+// LOGIN
+// =====================================================
 async function login(req, res) {
 
     try {
@@ -47,6 +52,8 @@ async function login(req, res) {
     }
 
 }
+
+
 module.exports = {
     register,
     login

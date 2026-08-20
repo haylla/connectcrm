@@ -1,26 +1,137 @@
-const db = require('../config/database');
+const dashboardService =
+    require('../services/dashboardService');
 
-exports.getStats = async (req, res) => {
+
+// =====================================================
+// DASHBOARD
+// =====================================================
+
+async function getDashboard(req, res) {
 
     try {
 
-        const [contacts] = await db.query(
-            'SELECT COUNT(*) AS total FROM contacts'
-        );
+        const companyId =
+            req.user?.company_id || 1;
 
-        res.json({
-            contacts: contacts[0].total,
-            leads: 0,
-            andamento: 0,
-            fechados: 0
-        });
+
+        const result =
+            await dashboardService.getDashboard(
+                companyId
+            );
+
+
+        return res.json(result);
+
 
     } catch (error) {
 
-        res.status(500).json({
+        console.error(
+            'Erro ao carregar dashboard:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success: false,
+
             error: error.message
+
         });
 
     }
+
+}
+
+
+// =====================================================
+// ATENDIMENTOS SEM RESPONSÁVEL
+// =====================================================
+
+async function getUnassigned(req, res) {
+
+    try {
+
+        const companyId =
+            req.user?.company_id || 1;
+
+
+        const result =
+            await dashboardService.getUnassigned(
+                companyId
+            );
+
+
+        return res.json(result);
+
+
+    } catch (error) {
+
+        console.error(
+            'Erro ao buscar atendimentos sem responsável:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            error: error.message
+
+        });
+
+    }
+
+}
+// =====================================================
+// LISTAR ATENDIMENTOS SEM RESPONSÁVEL
+// =====================================================
+
+async function getUnassigned(req, res) {
+
+    try {
+
+        const companyId =
+            req.user?.company_id || 1;
+
+
+        const result =
+            await dashboardService.getUnassignedList(
+                companyId
+            );
+
+
+        return res.json(result);
+
+
+    } catch (error) {
+
+        console.error(
+            'Erro ao buscar atendimentos sem responsável:',
+            error
+        );
+
+
+        return res.status(500).json({
+
+            success: false,
+
+            error: error.message
+
+        });
+
+    }
+
+}
+
+// =====================================================
+// EXPORTAÇÕES
+// =====================================================
+
+module.exports = {
+
+    getDashboard,
+    getUnassigned
 
 };

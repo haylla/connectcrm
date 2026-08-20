@@ -11,38 +11,113 @@ import Conversations from '../pages/Conversations/Conversations';
 import Kanban from '../pages/Kanban/Kanban';
 import Users from '../pages/Users/Users';
 
+import Layout from '../components/Layout/Layout';
+import ProtectedRoute from '../components/Auth/ProtectedRoute';
+
+
 function AppRoutes() {
 
     return (
+
         <BrowserRouter>
 
             <Routes>
 
+                {/* LOGIN */}
                 <Route
                     path="/"
                     element={<Login />}
                 />
 
+
+                {/* DASHBOARD - TODOS */}
                 <Route
                     path="/dashboard"
-                    element={<Dashboard />}
+                    element={
+                        <ProtectedRoute
+                            allowedRoles={[
+                                'ADMIN',
+                                'SUPERVISOR',
+                                'AGENT'
+                            ]}
+                        >
+                            <Layout>
+                                <Dashboard />
+                            </Layout>
+                        </ProtectedRoute>
+                    }
                 />
 
+
+                {/* CONTATOS - ADMIN E SUPERVISOR */}
                 <Route
                     path="/contacts"
-                    element={<Contacts />}
+                    element={
+                        <ProtectedRoute
+                            allowedRoles={[
+                                'ADMIN',
+                                'SUPERVISOR'
+                            ]}
+                        >
+                            <Layout>
+                                <Contacts />
+                            </Layout>
+                        </ProtectedRoute>
+                    }
                 />
+
+
+                {/* CONVERSAS - TODOS */}
                 <Route
                     path="/conversations"
-                    element={<Conversations />}
+                    element={
+                        <ProtectedRoute
+                            allowedRoles={[
+                                'ADMIN',
+                                'SUPERVISOR',
+                                'AGENT'
+                            ]}
+                        >
+                            <Layout>
+                                <Conversations />
+                            </Layout>
+                        </ProtectedRoute>
+                    }
                 />
+
+
+                {/* KANBAN - ADMIN E SUPERVISOR */}
                 <Route
                     path="/kanban"
-                    element={<Kanban />}
+                    element={
+                        <ProtectedRoute
+                            allowedRoles={[
+                                'ADMIN',
+                                'SUPERVISOR'
+                            ]}
+                        >
+                            <Layout>
+                                <Kanban />
+                            </Layout>
+                        </ProtectedRoute>
+                    }
                 />
+
+
+                {/* USUÁRIOS - SOMENTE ADMIN */}
                 <Route
                     path="/users"
-                    element={<Users />}
+                    element={
+                        <ProtectedRoute
+                            allowedRoles={[
+                                'ADMIN'
+                            ]}
+                        >
+                            <Layout>
+                                <Users />
+                            </Layout>
+                        </ProtectedRoute>
+                    }
                 />
 
             </Routes>

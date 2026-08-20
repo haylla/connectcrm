@@ -2,38 +2,34 @@ const express = require('express');
 
 const router = express.Router();
 
-const db = require('../config/database');
+const dashboardController =
+    require('../controllers/dashboardController');
 
 const authMiddleware =
     require('../middlewares/authMiddleware');
 
+
+
+// =====================================================
+// DASHBOARD
+// =====================================================
+
 router.get(
     '/',
     authMiddleware,
-    async (req, res) => {
-
-        try {
-
-            const [contacts] =
-                await db.query(
-                    'SELECT COUNT(*) AS total FROM contacts'
-                );
-
-            res.json({
-                contacts: contacts[0].total,
-                leads: 0,
-                andamento: 0,
-                fechados: 0
-            });
-
-        } catch (error) {
-
-            res.status(500).json({
-                error: error.message
-            });
-
-        }
-
-    }
+    dashboardController.getDashboard
 );
+
+
+// =====================================================
+// ATENDIMENTOS SEM RESPONSÁVEL
+// =====================================================
+
+router.get(
+    '/unassigned',
+    authMiddleware,
+    dashboardController.getUnassigned
+);
+
+
 module.exports = router;

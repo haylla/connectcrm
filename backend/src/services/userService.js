@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+
 const repository =
     require('../repositories/userRepository');
 
@@ -24,19 +26,57 @@ async function findById(id) {
 // =====================================================
 async function create(user) {
 
-    return await repository.createUser(user);
+    const hashedPassword = await bcrypt.hash(
+        user.password,
+        10
+    );
+
+    return await repository.createUser({
+
+        ...user,
+
+        password: hashedPassword
+
+    });
 
 }
-
 // =====================================================
 // ATUALIZAR
 // =====================================================
 async function update(id, user) {
 
-    return await repository.update(id, user);
+    if (user.password && user.password.trim()) {
+
+        const hashedPassword = await bcrypt.hash(
+            user.password,
+            10
+        );
+
+        return await repository.update(
+
+            id,
+
+            {
+                ...user,
+                password: hashedPassword
+            }
+
+        );
+
+    }
+
+    return await repository.update(
+
+        id,
+
+        {
+            ...user,
+            password: null
+        }
+
+    );
 
 }
-
 // =====================================================
 // EXCLUIR
 // =====================================================

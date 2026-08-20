@@ -1,21 +1,39 @@
 const db = require('../config/database');
 
+
+// =====================================================
+// CRIAR USUÁRIO
+// =====================================================
 async function createUser(user) {
 
     const [result] = await db.query(
+
         `INSERT INTO users
-        (company_id, name, email, password)
-        VALUES (?, ?, ?, ?)`,
+        (
+            company_id,
+            name,
+            email,
+            password,
+            role,
+            status
+        )
+        VALUES (?, ?, ?, ?, ?, ?)`,
+
         [
             user.company_id,
             user.name,
             user.email,
-            user.password
+            user.password,
+            user.role,
+            user.status
         ]
+
     );
 
     return result;
 }
+
+
 // =====================================================
 // LISTAR USUÁRIOS
 // =====================================================
@@ -28,7 +46,9 @@ async function findAll(companyId) {
             company_id,
             name,
             email,
-            created_at
+            created_at,
+            role,
+            status
          FROM users
          WHERE company_id = ?
          ORDER BY name`,
@@ -38,8 +58,8 @@ async function findAll(companyId) {
     );
 
     return rows;
-
 }
+
 
 // =====================================================
 // BUSCAR POR ID
@@ -52,7 +72,9 @@ async function findById(id) {
             id,
             company_id,
             name,
-            email
+            email,
+            role,
+            status
          FROM users
          WHERE id = ?`,
 
@@ -61,8 +83,8 @@ async function findById(id) {
     );
 
     return rows[0];
-
 }
+
 
 // =====================================================
 // ATUALIZAR
@@ -74,20 +96,24 @@ async function update(id, user) {
         `UPDATE users
          SET
             name = ?,
-            email = ?
+            email = ?,
+            role = ?,
+            status = ?
          WHERE id = ?`,
 
         [
             user.name,
             user.email,
+            user.role,
+            user.status,
             id
         ]
 
     );
 
     return result;
-
 }
+
 
 // =====================================================
 // EXCLUIR
@@ -104,19 +130,28 @@ async function remove(id) {
     );
 
 }
-module.exports = {
-    createUser
-};
 
+
+// =====================================================
+// BUSCAR POR E-MAIL
+// =====================================================
 async function findByEmail(email) {
 
     const [rows] = await db.query(
+
         'SELECT * FROM users WHERE email = ?',
+
         [email]
+
     );
 
     return rows[0];
 }
+
+
+// =====================================================
+// EXPORTAÇÕES
+// =====================================================
 module.exports = {
 
     createUser,

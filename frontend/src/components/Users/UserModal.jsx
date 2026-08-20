@@ -8,7 +8,7 @@ import {
     MenuItem
 } from "@mui/material";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 function UserModal({
@@ -39,11 +39,40 @@ function UserModal({
 
     });
 
+useEffect(() => {
+
+    if (user) {
+
+        setFormData({
+            id: user.id,
+            company_id: user.company_id || 1,
+            name: user.name || "",
+            email: user.email || "",
+            password: "",
+            role: user.role || "ADMIN",
+            status: user.status || "ACTIVE"
+        });
+
+    } else {
+
+        setFormData({
+            company_id: 1,
+            name: "",
+            email: "",
+            password: "",
+            role: "ADMIN",
+            status: "ACTIVE"
+        });
+
+    }
+
+}, [user]);
+
     function handleChange(event) {
 
         setFormData({
 
-            ...user,
+            ...formData,
 
             [event.target.name]: event.target.value
 
@@ -53,7 +82,7 @@ function UserModal({
 
     function handleSave() {
 
-        onSave(user);
+        onSave(formData);
 
     }
 
@@ -72,9 +101,7 @@ function UserModal({
         >
 
             <DialogTitle>
-
-                Novo Usuário
-
+                    {user ? "Editar Usuário" : "Novo Usuário"}
             </DialogTitle>
 
             <DialogContent>

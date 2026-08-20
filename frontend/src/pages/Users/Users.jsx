@@ -50,20 +50,71 @@ function Users() {
     }, []);
  
     const [openModal, setOpenModal] = useState(false);
+async function saveUser(user) {
 
-    async function saveUser(user) {
+    console.log("USUÁRIO ENVIADO:", user);
 
     try {
 
-        await api.post(
+        if (user.id) {
 
-            "/users",
+            console.log("EDITANDO:", user.id);
 
-            user
+            const response = await api.put(
+                `/users/${user.id}`,
+                user
+            );
 
-        );
+            console.log("RESPOSTA PUT:", response.data);
+
+        } else {
+
+            console.log("CRIANDO");
+
+            await api.post(
+                "/users",
+                user
+            );
+
+        }
 
         setOpenModal(false);
+
+        setSelectedUser(null);
+
+        loadUsers();
+
+    } catch (error) {
+
+        console.error("ERRO AO SALVAR:", error);
+        console.error("RESPOSTA DO SERVIDOR:", error.response?.data);
+
+    }
+
+}
+/*async function saveUser(user) {
+
+    try {
+
+        if (user.id) {
+
+            await api.put(
+                `/users/${user.id}`,
+                user
+            );
+
+        } else {
+
+            await api.post(
+                "/users",
+                user
+            );
+
+        }
+
+        setOpenModal(false);
+
+        setSelectedUser(null);
 
         loadUsers();
 
@@ -72,7 +123,9 @@ function Users() {
         console.error(error);
 
     }
-}
+
+}*/
+
 const [selectedUser, setSelectedUser] = useState(null);
 
               function editUser(user){
@@ -84,6 +137,36 @@ const [selectedUser, setSelectedUser] = useState(null);
     setOpenModal(true);
 
 }
+async function deleteUser(id) {
+
+    const confirmed = window.confirm(
+        'Tem certeza que deseja excluir este usuário?'
+    );
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+    try {
+
+        await api.delete(
+            `/users/${id}`
+        );
+
+        loadUsers();
+
+    } catch (error) {
+
+        console.error(
+            'Erro ao excluir usuário:',
+            error
+        );
+
+    }
+
+}
     return (
 
         <Box
@@ -92,8 +175,6 @@ const [selectedUser, setSelectedUser] = useState(null);
                 height: '100vh'
             }}
         >
-
-            <Sidebar />
 
             <Box
                 sx={{
@@ -140,6 +221,10 @@ const [selectedUser, setSelectedUser] = useState(null);
                                 <TableCell>Nome</TableCell>
 
                                 <TableCell>Email</TableCell>
+                                    
+                                <TableCell>Perfil</TableCell>
+
+                                <TableCell>Status</TableCell>
 
                                 <TableCell>Criado em</TableCell>
 
@@ -166,8 +251,26 @@ const [selectedUser, setSelectedUser] = useState(null);
                                         {user.email}
 
                                     </TableCell>
+                                            <TableCell>
 
-                                    <TableCell>
+                                            {user.role === 'ADMIN'
+                                                ? 'Administrador'
+                                                : user.role === 'SUPERVISOR'
+                                                    ? 'Supervisor'
+                                                    : 'Agente'
+                                            }
+
+                                        </TableCell>
+
+                                        <TableCell>
+
+                                            {user.status === 'ACTIVE'
+                                                ? 'Ativo'
+                                                : 'Inativo'
+                                            }
+
+                                        </TableCell>
+                                        <TableCell>
 
                                         {
 
@@ -194,7 +297,10 @@ const [selectedUser, setSelectedUser] = useState(null);
 
                                             </IconButton>
 
-                                            <IconButton color="error">
+                                            <IconButton
+                                                color="error"
+                                                onClick={() => deleteUser(user.id)}
+                                            >
 
                                                 <DeleteIcon />
 

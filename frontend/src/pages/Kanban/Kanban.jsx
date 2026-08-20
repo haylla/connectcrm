@@ -128,7 +128,7 @@ function closeContact() {
             }}
         >
 
-            <Sidebar />
+
 
             <Box
                 sx={{

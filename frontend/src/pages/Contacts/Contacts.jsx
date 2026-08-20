@@ -133,15 +133,13 @@ async function sendWhatsAppMessage() {
     return (
 
         
-        <Box sx={{ display: 'flex' }}>
-
-            <Sidebar />
-
-            <Box
-                sx={{
-                    flex: 1,
-                    padding: 4
-                }}
+         <Box
+        sx={{
+            width: '100%',
+            minHeight: '100vh',
+            p: 4,
+            boxSizing: 'border-box'
+        }}
             >
 
                 <Box
@@ -546,8 +544,6 @@ async function sendWhatsAppMessage() {
                 </Dialog>
 
             </Box>
-
-        </Box>
 
     );
 
