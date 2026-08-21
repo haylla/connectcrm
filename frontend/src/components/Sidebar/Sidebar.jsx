@@ -5,6 +5,7 @@ import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
 import PersonIcon from '@mui/icons-material/Person';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
+import CloseIcon from '@mui/icons-material/Close';
 
 import Avatar from '@mui/material/Avatar';
 
@@ -13,6 +14,7 @@ import { useState } from 'react';
 
 import {
     Box,
+    Drawer,
     IconButton,
     List,
     ListItemButton,
@@ -20,51 +22,55 @@ import {
     Typography
 } from '@mui/material';
 
-
 function Sidebar() {
 
     const [collapsed, setCollapsed] = useState(false);
-
-    const sidebarWidth = collapsed ? 80 : 240;
+    const [mobileOpen, setMobileOpen] = useState(false);
 
     const user = JSON.parse(
         localStorage.getItem('user')
     );
+
     const isAdmin = user?.role === 'ADMIN';
 
     const isSupervisor =
         user?.role === 'SUPERVISOR';
 
-    const isAgent =
-        user?.role === 'AGENT';
-        
-
+    const sidebarWidth = collapsed ? 80 : 240;
 
     function handleLogout() {
 
         localStorage.removeItem('token');
-
         localStorage.removeItem('user');
 
         window.location.href = '/';
 
     }
 
+    function handleMobileClose() {
 
-    return (
+        setMobileOpen(false);
+
+    }
+
+    // =====================================================
+    // CONTEÚDO DO MENU
+    // =====================================================
+
+    const menuContent = (
 
         <Box
-            component="aside"
             sx={{
-                width: sidebarWidth,
-                minWidth: sidebarWidth,
-                height: '100vh',
+                width: {
+                    xs: 260,
+                    sm: sidebarWidth
+                },
+                height: '100%',
                 backgroundColor: '#1E293B',
                 color: '#FFFFFF',
                 display: 'flex',
                 flexDirection: 'column',
-                boxSizing: 'border-box',
-                transition: 'width 0.2s ease'
+                boxSizing: 'border-box'
             }}
         >
 
@@ -77,38 +83,54 @@ function Sidebar() {
                     height: 70,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: collapsed
-                        ? 'center'
-                        : 'space-between',
+                    justifyContent: 'space-between',
                     px: 2,
                     boxSizing: 'border-box'
                 }}
             >
 
-                {!collapsed && (
+                <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    sx={{
+                        display: {
+                            xs: 'block',
+                            sm: collapsed ? 'none' : 'block'
+                        }
+                    }}
+                >
+                    ConnectCRM
+                </Typography>
 
-                    <Typography
-                        variant="h6"
-                        fontWeight="bold"
-                    >
-                        ConnectCRM
-                    </Typography>
-
-                )}
+                {/* FECHAR NO CELULAR */}
 
                 <IconButton
-                    onClick={() => setCollapsed(!collapsed)}
+                    onClick={() => {
+
+                        if (window.innerWidth < 900) {
+
+                            handleMobileClose();
+
+                        } else {
+
+                            setCollapsed(!collapsed);
+
+                        }
+
+                    }}
                     sx={{
                         color: '#FFFFFF'
                     }}
                 >
 
-                    <MenuIcon />
+                    {mobileOpen
+                        ? <CloseIcon />
+                        : <MenuIcon />
+                    }
 
                 </IconButton>
 
             </Box>
-
 
             {/* =====================================================
                 MENU
@@ -125,6 +147,7 @@ function Sidebar() {
                 <ListItemButton
                     component={Link}
                     to="/dashboard"
+                    onClick={handleMobileClose}
                     sx={{
                         my: 0.5,
                         borderRadius: 2,
@@ -137,18 +160,23 @@ function Sidebar() {
 
                     <DashboardIcon
                         sx={{
-                            mr: collapsed ? 0 : 2,
+                            mr: {
+                                xs: 2,
+                                sm: collapsed ? 0 : 2
+                            },
                             color: '#90CAF9'
                         }}
                     />
 
-                    {!collapsed && (
-
-                        <ListItemText
-                            primary="Dashboard"
-                        />
-
-                    )}
+                    <ListItemText
+                        primary="Dashboard"
+                        sx={{
+                            display: {
+                                xs: 'block',
+                                sm: collapsed ? 'none' : 'block'
+                            }
+                        }}
+                    />
 
                 </ListItemButton>
 
@@ -157,40 +185,51 @@ function Sidebar() {
 
                 {(isAdmin || isSupervisor) && (
 
-    <ListItemButton
-        component={Link}
-        to="/contacts"
-        sx={{
-            my: 0.5,
-            borderRadius: 2,
+                    <ListItemButton
+                        component={Link}
+                        to="/contacts"
+                        onClick={handleMobileClose}
+                        sx={{
+                            my: 0.5,
+                            borderRadius: 2,
 
-            '&:hover': {
-                backgroundColor: '#334155'
-            }
-        }}
-    >
+                            '&:hover': {
+                                backgroundColor: '#334155'
+                            }
+                        }}
+                    >
 
-        <PeopleIcon
-            sx={{
-                mr: collapsed ? 0 : 2,
-                color: '#90CAF9'
-            }}
-        />
+                        <PeopleIcon
+                            sx={{
+                                mr: {
+                                    xs: 2,
+                                    sm: collapsed ? 0 : 2
+                                },
+                                color: '#90CAF9'
+                            }}
+                        />
 
-        {!collapsed && (
-            <ListItemText
-                primary="Contatos"
-            />
-        )}
+                        <ListItemText
+                            primary="Contatos"
+                            sx={{
+                                display: {
+                                    xs: 'block',
+                                    sm: collapsed ? 'none' : 'block'
+                                }
+                            }}
+                        />
 
-    </ListItemButton>
+                    </ListItemButton>
 
-)}
+                )}
+
+
                 {/* CONVERSAS */}
 
                 <ListItemButton
                     component={Link}
                     to="/conversations"
+                    onClick={handleMobileClose}
                     sx={{
                         my: 0.5,
                         borderRadius: 2,
@@ -203,18 +242,23 @@ function Sidebar() {
 
                     <ChatIcon
                         sx={{
-                            mr: collapsed ? 0 : 2,
+                            mr: {
+                                xs: 2,
+                                sm: collapsed ? 0 : 2
+                            },
                             color: '#90CAF9'
                         }}
                     />
 
-                    {!collapsed && (
-
-                        <ListItemText
-                            primary="Conversas"
-                        />
-
-                    )}
+                    <ListItemText
+                        primary="Conversas"
+                        sx={{
+                            display: {
+                                xs: 'block',
+                                sm: collapsed ? 'none' : 'block'
+                            }
+                        }}
+                    />
 
                 </ListItemButton>
 
@@ -224,6 +268,7 @@ function Sidebar() {
                 <ListItemButton
                     component={Link}
                     to="/kanban"
+                    onClick={handleMobileClose}
                     sx={{
                         my: 0.5,
                         borderRadius: 2,
@@ -236,18 +281,23 @@ function Sidebar() {
 
                     <ViewKanbanIcon
                         sx={{
-                            mr: collapsed ? 0 : 2,
+                            mr: {
+                                xs: 2,
+                                sm: collapsed ? 0 : 2
+                            },
                             color: '#90CAF9'
                         }}
                     />
 
-                    {!collapsed && (
-
-                        <ListItemText
-                            primary="Kanban"
-                        />
-
-                    )}
+                    <ListItemText
+                        primary="Kanban"
+                        sx={{
+                            display: {
+                                xs: 'block',
+                                sm: collapsed ? 'none' : 'block'
+                            }
+                        }}
+                    />
 
                 </ListItemButton>
 
@@ -257,6 +307,7 @@ function Sidebar() {
                 <ListItemButton
                     component={Link}
                     to="/users"
+                    onClick={handleMobileClose}
                     sx={{
                         my: 0.5,
                         borderRadius: 2,
@@ -269,18 +320,23 @@ function Sidebar() {
 
                     <PersonIcon
                         sx={{
-                            mr: collapsed ? 0 : 2,
+                            mr: {
+                                xs: 2,
+                                sm: collapsed ? 0 : 2
+                            },
                             color: '#90CAF9'
                         }}
                     />
 
-                    {!collapsed && (
-
-                        <ListItemText
-                            primary="Usuários"
-                        />
-
-                    )}
+                    <ListItemText
+                        primary="Usuários"
+                        sx={{
+                            display: {
+                                xs: 'block',
+                                sm: collapsed ? 'none' : 'block'
+                            }
+                        }}
+                    />
 
                 </ListItemButton>
 
@@ -299,67 +355,62 @@ function Sidebar() {
                 }}
             >
 
-                {/* =================================================
-                    USUÁRIO LOGADO
-                ================================================= */}
+                {/* USUÁRIO LOGADO */}
 
-                {!collapsed && (
+                <Box
+                    sx={{
+                        display: {
+                            xs: 'flex',
+                            sm: collapsed ? 'none' : 'flex'
+                        },
+                        alignItems: 'center',
+                        gap: 1.5,
+                        px: 1,
+                        py: 1.5
+                    }}
+                >
+
+                    <Avatar
+                        sx={{
+                            width: 36,
+                            height: 36,
+                            backgroundColor: '#1976d2'
+                        }}
+                    >
+                        {user?.name
+                            ?.charAt(0)
+                            .toUpperCase()}
+                    </Avatar>
 
                     <Box
                         sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 1.5,
-                            px: 1,
-                            py: 1.5
+                            overflow: 'hidden'
                         }}
                     >
 
-                        <Avatar
+                        <Typography
+                            variant="body2"
+                            fontWeight="bold"
+                            noWrap
+                        >
+                            {user?.name}
+                        </Typography>
+
+                        <Typography
+                            variant="caption"
                             sx={{
-                                width: 36,
-                                height: 36,
-                                backgroundColor: '#1976d2'
+                                color: '#94A3B8'
                             }}
                         >
-                            {user?.name?.charAt(0).toUpperCase()}
-                        </Avatar>
-
-
-                        <Box
-                            sx={{
-                                overflow: 'hidden'
-                            }}
-                        >
-
-                            <Typography
-                                variant="body2"
-                                fontWeight="bold"
-                                noWrap
-                            >
-                                {user?.name}
-                            </Typography>
-
-
-                            <Typography
-                                variant="caption"
-                                sx={{
-                                    color: '#94A3B8'
-                                }}
-                            >
-                                {user?.role}
-                            </Typography>
-
-                        </Box>
+                            {user?.role}
+                        </Typography>
 
                     </Box>
 
-                )}
+                </Box>
 
 
-                {/* =================================================
-                    LOGOUT
-                ================================================= */}
+                {/* LOGOUT */}
 
                 <ListItemButton
                     onClick={handleLogout}
@@ -367,9 +418,12 @@ function Sidebar() {
                         my: 0.5,
                         borderRadius: 2,
 
-                        justifyContent: collapsed
-                            ? 'center'
-                            : 'flex-start',
+                        justifyContent: {
+                            xs: 'flex-start',
+                            sm: collapsed
+                                ? 'center'
+                                : 'flex-start'
+                        },
 
                         '&:hover': {
                             backgroundColor: '#334155'
@@ -379,30 +433,36 @@ function Sidebar() {
 
                     <LogoutIcon
                         sx={{
-                            mr: collapsed ? 0 : 2,
+                            mr: {
+                                xs: 2,
+                                sm: collapsed ? 0 : 2
+                            },
                             color: '#90CAF9'
                         }}
                     />
 
-                    {!collapsed && (
-
-                        <ListItemText
-                            primary="Sair"
-                        />
-
-                    )}
+                    <ListItemText
+                        primary="Sair"
+                        sx={{
+                            display: {
+                                xs: 'block',
+                                sm: collapsed ? 'none' : 'block'
+                            }
+                        }}
+                    />
 
                 </ListItemButton>
 
 
-                {/* =================================================
-                    VERSÃO
-                ================================================= */}
+                {/* VERSÃO */}
 
                 <Typography
                     variant="caption"
                     sx={{
-                        display: 'block',
+                        display: {
+                            xs: 'block',
+                            sm: collapsed ? 'none' : 'block'
+                        },
                         pt: 1,
                         textAlign: 'center',
                         color: '#94A3B8'
@@ -417,7 +477,86 @@ function Sidebar() {
 
     );
 
-}
+    return (
 
+        <>
+
+            {/* =====================================================
+                BOTÃO MOBILE
+            ===================================================== */}
+
+            <IconButton
+                onClick={() => setMobileOpen(true)}
+                sx={{
+                    display: {
+                        xs: 'flex',
+                        sm: 'none'
+                    },
+                    position: 'fixed',
+                    top: 12,
+                    left: 12,
+                    zIndex: 1300,
+                    backgroundColor: '#1E293B',
+                    color: '#FFFFFF',
+
+                    '&:hover': {
+                        backgroundColor: '#334155'
+                    }
+                }}
+            >
+
+                <MenuIcon />
+
+            </IconButton>
+
+
+            {/* =====================================================
+                SIDEBAR DESKTOP
+            ===================================================== */}
+
+            <Box
+                component="aside"
+                sx={{
+                    display: {
+                        xs: 'none',
+                        sm: 'block'
+                    },
+                    width: sidebarWidth,
+                    minWidth: sidebarWidth,
+                    height: '100vh',
+                    transition: 'width 0.2s ease'
+                }}
+            >
+
+                {menuContent}
+
+            </Box>
+
+
+            {/* =====================================================
+                SIDEBAR MOBILE
+            ===================================================== */}
+
+            <Drawer
+                anchor="left"
+                open={mobileOpen}
+                onClose={handleMobileClose}
+                sx={{
+                    display: {
+                        xs: 'block',
+                        sm: 'none'
+                    }
+                }}
+            >
+
+                {menuContent}
+
+            </Drawer>
+
+        </>
+
+    );
+
+}
 
 export default Sidebar;

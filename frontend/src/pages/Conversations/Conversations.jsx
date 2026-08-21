@@ -55,6 +55,10 @@ function Conversations() {
                         selectedConversation
                     }
 
+                    onConversationUpdated={
+                        setSelectedConversation
+                    }
+
                 />
 
                 <ChatBody

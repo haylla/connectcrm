@@ -99,15 +99,29 @@ async function close(id) {
     );
 
 }
+// =====================================================
+// ATUALIZAR STATUS DA CONVERSA
+// =====================================================
+async function updateStatus(id, status) {
 
+    await db.query(
+        `UPDATE conversations
+         SET status = ?
+         WHERE id = ?`,
+        [
+            status,
+            id
+        ]
+    );
+
+    return await findById(id);
+}
 module.exports = {
 
     create,
-
     findOpenConversation,
-
     findById,
-
-    close
+    close,
+    updateStatus
 
 };

@@ -63,11 +63,35 @@ async function closeConversation(id) {
     await repository.close(id);
 
 }
+// =====================================================
+// ATUALIZAR STATUS DA CONVERSA
+// =====================================================
+async function updateConversationStatus(id, status) {
 
+    const allowedStatuses = [
+        'BOT',
+        'HUMAN',
+        'WAITING',
+        'CLOSED'
+    ];
+
+    if (!allowedStatuses.includes(status)) {
+
+        throw new Error(
+            'Status de conversa inválido'
+        );
+
+    }
+
+    return await repository.updateStatus(
+        id,
+        status
+    );
+}
 module.exports = {
 
     getOrCreateConversation,
-
-    closeConversation
+    closeConversation,
+    updateConversationStatus
 
 };

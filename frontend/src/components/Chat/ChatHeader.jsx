@@ -9,9 +9,12 @@ import {
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 
+import api from '../../services/api';
+
 function ChatHeader({
     selectedContact,
-    selectedConversation
+    selectedConversation,
+    onConversationUpdated
 }) {
 
     if (!selectedContact) {
@@ -48,6 +51,50 @@ function ChatHeader({
 
     const isClosed =
         selectedConversation?.status === 'CLOSED';
+
+    // =====================================================
+    // ALTERAR STATUS DA CONVERSA
+    // =====================================================
+
+    const handleStatusChange = async (status) => {
+
+        if (!selectedConversation?.id) {
+            return;
+        }
+
+        try {
+
+            const response = await api.patch(
+                `/conversations/${selectedConversation.id}/status`,
+                {
+                    status
+                }
+            );
+
+            // Atualiza a conversa selecionada
+            // com o retorno real do backend
+            if (onConversationUpdated) {
+
+                onConversationUpdated(
+                    response.data
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(
+                'Erro ao alterar status da conversa:',
+                error
+            );
+
+            alert(
+                'Não foi possível alterar o status da conversa.'
+            );
+
+        }
+
+    };
 
     return (
 
@@ -139,6 +186,9 @@ function ChatHeader({
                                 startIcon={
                                     <SmartToyOutlinedIcon />
                                 }
+                                onClick={() =>
+                                    handleStatusChange('BOT')
+                                }
                             >
                                 Devolver para IA
                             </Button>
@@ -160,6 +210,9 @@ function ChatHeader({
                                 variant="contained"
                                 startIcon={
                                     <PersonIcon />
+                                }
+                                onClick={() =>
+                                    handleStatusChange('HUMAN')
                                 }
                             >
                                 Assumir atendimento

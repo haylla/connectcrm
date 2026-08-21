@@ -26,5 +26,11 @@ router.patch(
     controller.close
 
 );
-
+// =====================================================
+// ATUALIZA STATUS DA CONVERSA
+// =====================================================
+router.patch(
+    '/:id/status',
+    controller.updateStatus
+);
 module.exports = router;

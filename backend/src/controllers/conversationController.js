@@ -64,11 +64,39 @@ async function close(req, res) {
     }
 
 }
+// =====================================================
+// ATUALIZA STATUS DA CONVERSA
+// =====================================================
+async function updateStatus(req, res) {
 
+    try {
+
+        const conversation =
+            await conversationService.updateConversationStatus(
+                req.params.id,
+                req.body.status
+            );
+
+        return res.json(conversation);
+
+    } catch (error) {
+
+        console.error(error);
+
+        return res.status(400).json({
+
+            success: false,
+            error: error.message
+
+        });
+
+    }
+
+}
 module.exports = {
 
     getOrCreate,
-
-    close
+    close,
+    updateStatus
 
 };

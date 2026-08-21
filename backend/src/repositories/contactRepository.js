@@ -1,6 +1,98 @@
 const db = require('../config/database');
 
 // =====================================================
+// NORMALIZAR TELEFONE
+// =====================================================
+// Remove tudo que não for número.
+// Também permite comparar algumas variações comuns
+// de números brasileiros recebidos pelo WhatsApp.
+// =====================================================
+function normalizePhone(phone) {
+
+    if (!phone) {
+        return '';
+    }
+
+    return String(phone).replace(/\D/g, '');
+
+}
+
+// =====================================================
+// GERAR VARIAÇÕES DO TELEFONE
+// =====================================================
+function getPhoneVariants(phone) {
+
+    const normalized = normalizePhone(phone);
+
+    if (!normalized) {
+        return [];
+    }
+
+    const variants = new Set();
+
+    variants.add(normalized);
+
+    // =================================================
+    // BRASIL
+    // =================================================
+    // Exemplo recebido:
+    // 554191338112
+    //
+    // Cadastrado:
+    // 5541991338112
+    //
+    // Quando vier sem o 9 do celular:
+    // 55 + DDD + número de 8 dígitos
+    //
+    // adicionamos o 9 depois do DDD.
+    // =================================================
+
+    if (
+        normalized.startsWith('55') &&
+        normalized.length === 12
+    ) {
+
+        const country = normalized.substring(0, 2);
+        const ddd = normalized.substring(2, 4);
+        const number = normalized.substring(4);
+
+        variants.add(
+            country +
+            ddd +
+            '9' +
+            number
+        );
+
+    }
+
+    // =================================================
+    // Caso venha com 13 dígitos e possua o 9,
+    // também geramos a versão sem o 9.
+    // =================================================
+
+    if (
+        normalized.startsWith('55') &&
+        normalized.length === 13 &&
+        normalized.charAt(4) === '9'
+    ) {
+
+        const country = normalized.substring(0, 2);
+        const ddd = normalized.substring(2, 4);
+        const number = normalized.substring(5);
+
+        variants.add(
+            country +
+            ddd +
+            number
+        );
+
+    }
+
+    return [...variants];
+
+}
+
+// =====================================================
 // CRIAR CONTATO
 // =====================================================
 async function create(contact) {
@@ -83,14 +175,33 @@ async function findById(id) {
     return rows[0];
 
 }
+
 // =====================================================
 // BUSCAR CONTATO PELO TELEFONE
 // =====================================================
 async function findByPhone(phone) {
 
     console.log('==============================');
-    console.log('Telefone recebido:', JSON.stringify(phone));
-    console.log('Tamanho:', phone.length);
+    console.log(
+        'Telefone recebido:',
+        JSON.stringify(phone)
+    );
+
+    const normalizedPhone =
+        normalizePhone(phone);
+
+    const variants =
+        getPhoneVariants(phone);
+
+    console.log(
+        'Telefone normalizado:',
+        normalizedPhone
+    );
+
+    console.log(
+        'Variações consideradas:',
+        variants
+    );
 
     const [rows] = await db.query(
 
@@ -98,43 +209,39 @@ async function findByPhone(phone) {
 
     );
 
-    console.log('Total de contatos:', rows.length);
+    console.log(
+        'Total de contatos:',
+        rows.length
+    );
 
     const contact = rows.find(c => {
 
+        const databasePhone =
+            normalizePhone(c.phone);
+
+        const found =
+            variants.includes(databasePhone);
+
         console.log(
-            `Banco: "${c.phone}" (${String(c.phone).length}) | Recebido: "${phone}" (${phone.length})`
+            `Banco: "${c.phone}" -> "${databasePhone}" | Recebido: "${phone}" -> "${normalizedPhone}" | Match: ${found}`
         );
 
-        return String(c.phone).trim() === String(phone).trim();
+        return found;
 
     });
 
-    console.log('Contato encontrado:', contact);
-    console.log('==============================');
+    console.log(
+        'Contato encontrado:',
+        contact
+    );
+
+    console.log(
+        '=============================='
+    );
 
     return contact;
 
 }
-// =====================================================
-// BUSCAR CONTATO PELO TELEFONE
-// Utilizado pelo webhook do N8N.
-// =====================================================
-//async function findByPhone(phone) {
-
-    //const [rows] = await db.query(
-
-        //`SELECT *
-        // FROM contacts
-        // WHERE phone = ?`,
-
-        //[phone]
-
-    //);
-
-    //return rows[0];
-
-//}
 
 // =====================================================
 // ATUALIZAR CONTATO

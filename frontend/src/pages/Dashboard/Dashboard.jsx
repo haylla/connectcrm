@@ -343,8 +343,14 @@ async function assignUser(atendimentoId) {
             sx={{
                 width: '100%',
                 minHeight: '100vh',
-                p: 4,
-                boxSizing: 'border-box'
+                p: {
+                    xs: 1.5,
+                    sm: 2,
+                    md: 3,
+                    lg: 4
+                },
+                boxSizing: 'border-box',
+                overflowX: 'hidden'
             }}
         >
 
@@ -355,6 +361,13 @@ async function assignUser(atendimentoId) {
             <Typography
                 variant="h4"
                 gutterBottom
+                sx={{
+                    fontSize: {
+                        xs: '1.75rem',
+                        sm: '2rem',
+                        md: '2.125rem'
+                    }
+                }}
             >
                 Dashboard
             </Typography>
@@ -371,6 +384,12 @@ async function assignUser(atendimentoId) {
                 <Typography
                     variant="h5"
                     fontWeight="bold"
+                    sx={{
+                        fontSize: {
+                            xs: '1.35rem',
+                            sm: '1.5rem'
+                        }
+                    }}
                 >
                     Olá, {user?.name}
                 </Typography>
@@ -379,6 +398,12 @@ async function assignUser(atendimentoId) {
                 <Typography
                     color="text.secondary"
                     mt={1}
+                    sx={{
+                        fontSize: {
+                            xs: '0.9rem',
+                            sm: '1rem'
+                        }
+                    }}
                 >
                     Bem-vinda ao ConnectCRM.
                     Acompanhe seus indicadores em tempo real.
@@ -397,13 +422,23 @@ async function assignUser(atendimentoId) {
 
                     gridTemplateColumns: {
                         xs: '1fr',
-                        sm: 'repeat(2, 1fr)',
-                        lg: 'repeat(4, 1fr)'
+                        sm: 'repeat(2, minmax(0, 1fr))',
+                        lg: 'repeat(4, minmax(0, 1fr))'
                     },
 
-                    gap: 3,
+                    gap: {
+                        xs: 1.5,
+                        sm: 2,
+                        md: 3
+                    },
 
-                    marginTop: 4
+                    marginTop: {
+                        xs: 2,
+                        md: 4
+                    },
+
+                    width: '100%',
+                    minWidth: 0
                 }}
             >
 
@@ -516,11 +551,18 @@ async function assignUser(atendimentoId) {
 >
     <Paper
         sx={{
-            p: 2.5,
+            p: {
+                xs: 1.5,
+                sm: 2.5
+            },
             borderRadius: 3,
             display: 'flex',
-            alignItems: 'center',
+            alignItems: {
+                xs: 'flex-start',
+                sm: 'center'
+            },
             justifyContent: 'space-between',
+            gap: 2,
             border: dashboard.unassigned > 0
                 ? '1px solid #f59e0b'
                 : '1px solid #e5e7eb'
@@ -545,10 +587,15 @@ async function assignUser(atendimentoId) {
                 }}
             />
 
-            <Box>
-
+            <Box sx={{ minWidth: 0 }}>
                 <Typography
                     fontWeight="bold"
+                    sx={{
+                        fontSize: {
+                            xs: '0.95rem',
+                            sm: '1rem'
+                        }
+                    }}
                 >
                     Atendimentos sem responsável
                 </Typography>
@@ -556,10 +603,15 @@ async function assignUser(atendimentoId) {
                 <Typography
                     variant="body2"
                     color="text.secondary"
+                    sx={{
+                        fontSize: {
+                            xs: '0.8rem',
+                            sm: '0.875rem'
+                        }
+                    }}
                 >
                     Atendimentos abertos aguardando distribuição
                 </Typography>
-
             </Box>
 
         </Box>
@@ -569,6 +621,11 @@ async function assignUser(atendimentoId) {
             variant="h4"
             fontWeight="bold"
             sx={{
+                flexShrink: 0,
+                fontSize: {
+                    xs: '1.75rem',
+                    sm: '2.125rem'
+                },
                 color:
                     dashboard.unassigned > 0
                         ? '#f59e0b'
@@ -589,6 +646,16 @@ async function assignUser(atendimentoId) {
     onClose={() => setOpenUnassigned(false)}
     fullWidth
     maxWidth="md"
+    sx={{
+        '& .MuiDialog-paper': {
+            width: '100%',
+            maxHeight: '90vh',
+            m: {
+                xs: 1,
+                sm: 2
+            }
+        }
+    }}
 >
 
     <DialogTitle>
@@ -625,7 +692,14 @@ async function assignUser(atendimentoId) {
                             sx={{
                                 display: 'flex',
                                 justifyContent: 'space-between',
-                                alignItems: 'center',
+                                alignItems: {
+                                    xs: 'stretch',
+                                    sm: 'center'
+                                },
+                                flexDirection: {
+                                    xs: 'column',
+                                    sm: 'row'
+                                },
                                 gap: 2
                             }}
                         >
@@ -649,7 +723,8 @@ async function assignUser(atendimentoId) {
                                     sx={{
                                         display: 'flex',
                                         gap: 1,
-                                        mt: 1
+                                        mt: 1,
+                                        flexWrap: 'wrap'
                                     }}
                                 >
 
@@ -683,7 +758,10 @@ async function assignUser(atendimentoId) {
                                     )
                                 }
                                 sx={{
-                                    minWidth: 220
+                                    minWidth: {
+                                        xs: '100%',
+                                        sm: 220
+                                    }
                                 }}
                             >
 
@@ -706,11 +784,17 @@ async function assignUser(atendimentoId) {
 
                             </TextField>
                             <Button
-                                    variant="contained"
-                                    onClick={() =>
-                                        assignUser(item.id)
+                                variant="contained"
+                                onClick={() =>
+                                    assignUser(item.id)
+                                }
+                                sx={{
+                                    width: {
+                                        xs: '100%',
+                                        sm: 'auto'
                                     }
-                                >
+                                }}
+                            >
                                     Atribuir
                                 </Button>
 
@@ -745,9 +829,19 @@ async function assignUser(atendimentoId) {
 
             <Paper
                 sx={{
-                    mt: 5,
-                    p: 3,
-                    borderRadius: 3
+                    mt: {
+                        xs: 3,
+                        md: 5
+                    },
+                    p: {
+                        xs: 1.5,
+                        sm: 2,
+                        md: 3
+                    },
+                    borderRadius: 3,
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    overflow: 'hidden'
                 }}
             >
 
@@ -760,9 +854,19 @@ async function assignUser(atendimentoId) {
                 </Typography>
 
 
-                <TableContainer>
+                <TableContainer
+                    sx={{
+                        width: '100%',
+                        overflowX: 'auto',
+                        WebkitOverflowScrolling: 'touch'
+                    }}
+                >
 
-                    <Table>
+                    <Table
+                        sx={{
+                            minWidth: 650
+                        }}
+                    >
 
                         <TableHead>
 
@@ -850,9 +954,19 @@ async function assignUser(atendimentoId) {
 
             <Paper
                 sx={{
-                    mt: 4,
-                    p: 3,
-                    borderRadius: 3
+                    mt: {
+                        xs: 2.5,
+                        md: 4
+                    },
+                    p: {
+                        xs: 1.5,
+                        sm: 2,
+                        md: 3
+                    },
+                    borderRadius: 3,
+                    width: '100%',
+                    boxSizing: 'border-box',
+                    overflow: 'hidden'
                 }}
             >
 
@@ -865,9 +979,19 @@ async function assignUser(atendimentoId) {
                 </Typography>
 
 
-                <TableContainer>
+                <TableContainer
+                    sx={{
+                        width: '100%',
+                        overflowX: 'auto',
+                        WebkitOverflowScrolling: 'touch'
+                    }}
+                >
 
-                    <Table>
+                    <Table
+                        sx={{
+                            minWidth: 650
+                        }}
+                    >
 
                         <TableHead>
 
